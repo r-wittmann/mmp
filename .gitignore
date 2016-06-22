@@ -1,29 +1,49 @@
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# Mac
+.DS_Store
 
-# Precompiled Headers
-*.gch
-*.pch
+#Java
+*.class
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# XCode
+*.moved-aside
+build/*
+*.xcworkspace
+*.mode1v3
+*.mode2v3
+*.pbxuser
+!default.xcworkspace
+!default.mode1v3
+!default.mode2v3
+!default.pbxuser
+*.perspectivev3
+profile
+xcuserdata
+.idea/*
 
-# Fortran module files
-*.mod
-*.smod
+#Cocoa pods
+*.old
+Pods/*
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+#cocos2d-x
+libs/
+bin/
+obj/
+assets/
+gen/
+out/
+.classpath
+.project
+.cproject
 
-# Executables
-*.exe
-*.out
-*.app
+# backup files
+*.bak
+*.bak[0-9][0-9]
+*.orig
+*.orig[0-9][0-9]
+
+# source packages - anywhere
+*.tar.bz2
+*.tar.gz
+*.tar
+*.tgz
+*.gtgz
