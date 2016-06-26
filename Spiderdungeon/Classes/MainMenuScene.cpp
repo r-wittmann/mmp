@@ -1,5 +1,6 @@
 #include "GameScene.h"
 #include "MainMenuScene.h"
+#include "HighscoreScene.h"
 //#include "SimpleAudioEngine.h"
 
 USING_NS_CC;
@@ -98,6 +99,10 @@ void MainMenuScene::goToGameScene(Ref* sender)
     Director::getInstance()->replaceScene(scene);
 }
 
-// highscore function (not implemented yet)
+// highscore function
 void MainMenuScene::goToHighscoreScene(Ref* sender)
-{}
+{
+    auto scene = HighscoreScene::createScene();
+    
+    Director::getInstance()->replaceScene(scene);
+}
