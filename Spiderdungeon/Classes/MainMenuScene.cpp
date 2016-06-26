@@ -32,46 +32,47 @@ bool MainMenuScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin      = Director::getInstance()->getVisibleOrigin();
 
-    /////////////////////////////
-    // 2. add a menu item with "X" image, which is clicked to quit the program
-    //    you may modify it.
+    
 
-    // add a "close" icon to exit the progress. it's an autorelease object
+    // create play button and position relative to menu object
+    auto playButton = MenuItemImage::create(
+                                            "Buttons/startGameButton.png",
+                                            "Buttons/startGameButton.png",
+                                            CC_CALLBACK_1(MainMenuScene::goToGameScene, this));
+    
+    playButton->setPosition(Point::ZERO);
+    
+    // create highscore button and position relative to menu object
+    auto highscoreButton = MenuItemImage::create(
+                                            "Buttons/highscoreButton.png",
+                                            "Buttons/highscoreButton.png",
+                                            CC_CALLBACK_1(MainMenuScene::goToHighscoreScene, this));
+    
+    highscoreButton->setPosition(Point(0, 0 - playButton->getContentSize().height - 10));
+    
+    // create exit button and position relative to menu object
     auto exitButton  = MenuItemImage::create(
-                                           "CloseNormal.png",
-                                           "CloseSelected.png",
-                                           CC_CALLBACK_1(MainMenuScene::menuCloseCallback, this));
+                                             "Buttons/exitGameButton.png",
+                                             "Buttons/exitGameButton.png",
+                                             CC_CALLBACK_1(MainMenuScene::menuCloseCallback, this));
+    
+    exitButton->setPosition(Point(0, 0 - highscoreButton->getContentSize().height - 10 - playButton->getContentSize().height - 10));
+    
 
-    exitButton->setPosition(Vec2(origin.x + visibleSize.width - exitButton->getContentSize().width/2 ,
-                                origin.y + exitButton->getContentSize().height/2));
-
-    // create menu, it's an autorelease object
-    auto menu        = Menu::create(exitButton, NULL);
-    menu->setPosition(Vec2::ZERO);
+    // create menu, it's an autorelease object, and add buttons to it
+    auto menu = Menu::create(playButton, highscoreButton, exitButton, NULL);
+    menu->setPosition(Point(origin.x + visibleSize.width / 2,
+                            origin.y + visibleSize.height - 100));
     this->addChild(menu, 1);
 
-    auto playButton = MenuItemImage::create(
-                                            "CloseNormal.png",
-                                            "CloseSelected.png",
-                                            CC_CALLBACK_1(MainMenuScene::goToGameScene, this));
-
-    playButton->setPosition(Point(visibleSize.width / 2 + origin.x, visibleSize.height / 2 + origin.y));
-
-    menu = Menu::create(playButton, NULL);
-    menu->setPosition(Point::ZERO);
-    this->addChild(menu);
-
-    /////////////////////////////
-    // 3. add your codes below...
-
-    // add a label shows "Hello World"
-    // create and initialize a label
+    
+    // create and initialize a main menu label
 
     auto label       = Label::createWithTTF("Main Menu", "fonts/Marker Felt.ttf", 24);
 
     // position the label on the center of the screen
-    label->setPosition(Vec2(origin.x + visibleSize.width/2,
-                            origin.y + visibleSize.height - label->getContentSize().height));
+    label->setPosition(Point(origin.x + visibleSize.width/2,
+                            origin.y + visibleSize.height - label->getContentSize().height - 10));
 
     // add the label as a child to this layer
     this->addChild(label, 1);
@@ -88,7 +89,7 @@ bool MainMenuScene::init()
     return true;
 }
 
-
+// exit game function
 void MainMenuScene::menuCloseCallback(Ref* sender)
 {
     Director::getInstance()->end();
@@ -98,9 +99,14 @@ void MainMenuScene::menuCloseCallback(Ref* sender)
 #endif
 }
 
+// start game function
 void MainMenuScene::goToGameScene(Ref* sender)
 {
-  auto scene = GameScene::createScene();
+    auto scene = GameScene::createScene();
   
-  Director::getInstance()->replaceScene(scene);
+    Director::getInstance()->replaceScene(scene);
 }
+
+// highscore function (not implemented yet)
+void MainMenuScene::goToHighscoreScene(Ref* sender)
+{}

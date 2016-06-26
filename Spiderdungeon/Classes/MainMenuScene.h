@@ -13,6 +13,7 @@ public:
     // a selector callback
     void menuCloseCallback(cocos2d::Ref* sender);
     void goToGameScene(cocos2d::Ref* sender);
+    void goToHighscoreScene(cocos2d::Ref* sender);
   
     // implement the "static create()" method manually
     CREATE_FUNC(MainMenuScene);
