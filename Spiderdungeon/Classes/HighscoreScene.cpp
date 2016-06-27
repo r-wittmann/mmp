@@ -3,6 +3,8 @@
 
 USING_NS_CC;
 
+const char *HIGH_SCORE="key1";
+
 Scene* HighscoreScene::createScene()
 {
   // 'scene' is an autorelease object
@@ -26,7 +28,26 @@ bool HighscoreScene::init()
     {
         return false;
     }
-    
+
+  
+  int score = 3000; // TODO replace with actual score
+  
+  CCUserDefault *def=CCUserDefault::sharedUserDefault();
+  long int high_score=0;
+  if(score>high_score)
+  {
+    def->setIntegerForKey(HIGH_SCORE, score);
+    //def->flush();
+    //high_score=def->getIntegerForKey(HIGH_SCORE);
+  }
+  high_score=def->getIntegerForKey(HIGH_SCORE);
+  
+  char s[7];
+  sprintf(s,"%ld", high_score);
+  CCLabelTTF *high_label=CCLabelTTF::create(s, "arial.ttf", 20);
+  high_label->setPosition(ccp(200, 200));
+  this->addChild(high_label,2);
+
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin      = Director::getInstance()->getVisibleOrigin();
     
