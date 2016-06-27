@@ -1,7 +1,10 @@
+#include <iostream>
+
 #include "GameScene.h"
 #include "MainMenuScene.h"
 
 USING_NS_CC;
+using namespace std;
 
 cocos2d::Scene* GameScene::createScene()
 {
@@ -62,6 +65,14 @@ bool GameScene::init()
     canonWheel->setScale(0.2);
     canonWheel->setPosition(Point(origin.x + 70, origin.y + 40));
     this->addChild(canonWheel, 4);
+    
+    auto clicklistener = EventListenerMouse::create();
+    clicklistener->onMouseDown = CC_CALLBACK_1(GameScene::click, this);
+    clicklistener->onMouseMove = CC_CALLBACK_1(GameScene::move, this);
+    
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(clicklistener, this);
+
+    
     return true;
 }
 
@@ -75,4 +86,14 @@ void GameScene::goToMainMenuScene(Ref* sender)
     auto scene = MainMenuScene::createScene();
     
     Director::getInstance()->replaceScene(scene);
+}
+
+void GameScene::click(Event* event)
+{
+    cout << "press ";
+}
+
+void GameScene::move(Event* event)
+{
+    //
 }

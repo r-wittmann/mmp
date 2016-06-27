@@ -13,6 +13,8 @@ public:
     // a selector callback
     void pauseGame(cocos2d::Ref* sender);
     void goToMainMenuScene(cocos2d::Ref* sender);
+    void click(cocos2d::Event* event);
+    void move(cocos2d::Event* event);
     
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
