@@ -49,6 +49,19 @@ bool GameScene::init()
                             origin.y + pauseButton->getContentSize().height / 2 + 5));
     this->addChild(menu, 1);
     
+    //create Canon
+    auto canonBody = Sprite::create("Kanone/Kanone_Körper.png");
+    canonBody->setScale(0.2);
+    canonBody->setPosition(Point(origin.x + 70, origin.y + 50));
+    this->addChild(canonBody, 3);
+    auto canonStick = Sprite::create("Kanone/Kanonen_Stab.png");
+    canonStick->setScale(0.2);
+    canonStick->setPosition(Point(origin.x + 65, origin.y + 50));
+    this->addChild(canonStick, 2);
+    auto canonWheel = Sprite::create("Kanone/Kanonen_Rad.png");
+    canonWheel->setScale(0.2);
+    canonWheel->setPosition(Point(origin.x + 70, origin.y + 40));
+    this->addChild(canonWheel, 4);
     return true;
 }
 
