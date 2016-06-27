@@ -10,11 +10,20 @@ public:
   
     virtual bool init();
     
+    // variables needed for click and drag calculations
+    private: bool mouseDown = false;
+    private: float clickPositionX;
+    private: float clickPositionY;
+    private: float distance;
+    private: float angle;
+    
     // a selector callback
     void pauseGame(cocos2d::Ref* sender);
     void goToMainMenuScene(cocos2d::Ref* sender);
-    void click(cocos2d::Event* event);
-    void move(cocos2d::Event* event);
+    
+    void mouseClicked(cocos2d::Event* event);
+    void mouseDragged(cocos2d::Event* event);
+    void mouseReleased(cocos2d::Event* event);
     
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);

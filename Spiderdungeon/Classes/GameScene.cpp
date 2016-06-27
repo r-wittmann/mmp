@@ -67,8 +67,9 @@ bool GameScene::init()
     this->addChild(canonWheel, 4);
     
     auto clicklistener = EventListenerMouse::create();
-    clicklistener->onMouseDown = CC_CALLBACK_1(GameScene::click, this);
-    clicklistener->onMouseMove = CC_CALLBACK_1(GameScene::move, this);
+    clicklistener->onMouseDown = CC_CALLBACK_1(GameScene::mouseClicked, this);
+    clicklistener->onMouseMove = CC_CALLBACK_1(GameScene::mouseDragged, this);
+    clicklistener->onMouseUp = CC_CALLBACK_1(GameScene::mouseReleased, this);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(clicklistener, this);
 
@@ -88,12 +89,34 @@ void GameScene::goToMainMenuScene(Ref* sender)
     Director::getInstance()->replaceScene(scene);
 }
 
-void GameScene::click(Event* event)
+void GameScene::mouseClicked(Event* event)
 {
-    cout << "press ";
+    EventMouse* e = (EventMouse*)event;
+    mouseDown = true;
+    clickPositionX = e->getCursorX();
+    clickPositionY = e->getCursorY();
 }
 
-void GameScene::move(Event* event)
+void GameScene::mouseDragged(Event* event)
 {
-    //
+    EventMouse* e = (EventMouse*)event;
+    if (mouseDown) {
+        float deltaX = clickPositionX - e->getCursorX();
+        float deltaY = clickPositionY - e->getCursorY();
+        distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
+        cout << "Distance: ";
+        cout << distance;
+        
+        float pi = acos(-1);
+        angle = atan(deltaY / deltaX) * 180 / pi;
+        cout << " Angle: ";
+        cout << angle;
+        cout << "\n";
+        
+    }
+}
+
+void GameScene::mouseReleased(Event* event)
+{
+    mouseDown = false;
 }
