@@ -21,9 +21,9 @@ public:
     void pauseGame(cocos2d::Ref* sender);
     void goToMainMenuScene(cocos2d::Ref* sender);
     
-    void mouseClicked(cocos2d::Event* event);
     void mouseDragged(cocos2d::Event* event, cocos2d::Sprite* canonBody, cocos2d::Sprite* canonStick);
     void mouseReleased(cocos2d::Event* event);
+    void mouseClicked(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
     
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
