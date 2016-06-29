@@ -10,9 +10,23 @@ public:
   
     virtual bool init();
     
+    private: cocos2d::Point visibleSize;
+    private: cocos2d::Vec2 origin;
+    
+    // variables needed for click and drag calculations
+    private: bool mouseDown = false;
+    private: float clickPositionX;
+    private: float clickPositionY;
+    private: float distance;
+    private: float angle;
+        
     // a selector callback
     void pauseGame(cocos2d::Ref* sender);
     void goToMainMenuScene(cocos2d::Ref* sender);
+    
+    void mouseClicked(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
+    void mouseDragged(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
+    void mouseReleased(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
     
     // implement the "static create()" method manually
     CREATE_FUNC(GameScene);
