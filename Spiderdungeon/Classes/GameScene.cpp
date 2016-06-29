@@ -73,7 +73,7 @@ bool GameScene::init()
     auto clicklistener = EventListenerMouse::create();
     clicklistener->onMouseDown = CC_CALLBACK_1(GameScene::mouseClicked, this, canonStick, canonBody);
     clicklistener->onMouseMove = CC_CALLBACK_1(GameScene::mouseDragged, this, canonStick, canonBody);
-    clicklistener->onMouseUp = CC_CALLBACK_1(GameScene::mouseReleased, this);
+    clicklistener->onMouseUp = CC_CALLBACK_1(GameScene::mouseReleased, this, canonStick, canonBody);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(clicklistener, this);
 
@@ -127,7 +127,21 @@ void GameScene::mouseDragged(Event* event, Sprite* canonStick, Sprite* canonBody
     }
 }
 
-void GameScene::mouseReleased(Event* event)
+void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBody)
 {
     mouseDown = false;
+    // call function to fire canonball with angle and distance (distance is between 0 and 50)
+    cout << "Angle: ";
+    cout << angle;
+    cout << " Force: ";
+    cout << distance * 2;
+    cout << "%\n";
+    
+    // move canon back to original position
+    canonStick->setAnchorPoint(Point(0.5, 0.5));
+    auto rotateBody = RotateTo::create(2 * abs(angle) /90, 0);
+    auto rotateStick = RotateTo::create(2 * abs(angle) / 90, 0);
+    canonBody->runAction(rotateBody);
+    canonStick->runAction(rotateStick);
+    
 }
