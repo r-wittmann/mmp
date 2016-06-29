@@ -55,11 +55,13 @@ bool GameScene::init()
     //create Canon
     auto canonBody = Sprite::create("Kanone/Kanone_Körper.png");
     canonBody->setScale(0.2);
-    canonBody->setPosition(Point(origin.x + 70, origin.y + 50));
+    canonBody->setAnchorPoint(Point(0.5, 0));
+    canonBody->setPosition(Point(origin.x + 70, origin.y + 40));
     this->addChild(canonBody, 3);
     auto canonStick = Sprite::create("Kanone/Kanonen_Stab.png");
     canonStick->setScale(0.2);
-    canonStick->setPosition(Point(origin.x + 65, origin.y + 50));
+    canonStick->setAnchorPoint(Point(0.5, 0));
+    canonStick->setPosition(Point(origin.x + 70, origin.y + 40));
     this->addChild(canonStick, 2);
     auto canonWheel = Sprite::create("Kanone/Kanonen_Rad.png");
     canonWheel->setScale(0.2);
@@ -68,7 +70,7 @@ bool GameScene::init()
     
     auto clicklistener = EventListenerMouse::create();
     clicklistener->onMouseDown = CC_CALLBACK_1(GameScene::mouseClicked, this);
-    clicklistener->onMouseMove = CC_CALLBACK_1(GameScene::mouseDragged, this);
+    clicklistener->onMouseMove = CC_CALLBACK_1(GameScene::mouseDragged, this, canonStick, canonBody);
     clicklistener->onMouseUp = CC_CALLBACK_1(GameScene::mouseReleased, this);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(clicklistener, this);
@@ -97,21 +99,19 @@ void GameScene::mouseClicked(Event* event)
     clickPositionY = e->getCursorY();
 }
 
-void GameScene::mouseDragged(Event* event)
+void GameScene::mouseDragged(Event* event, Sprite* canonStick, Sprite* canonBody)
 {
     EventMouse* e = (EventMouse*)event;
     if (mouseDown) {
         float deltaX = clickPositionX - e->getCursorX();
         float deltaY = clickPositionY - e->getCursorY();
         distance = sqrt(pow(deltaX, 2) + pow(deltaY, 2));
-        cout << "Distance: ";
-        cout << distance;
         
         float pi = acos(-1);
         angle = atan(deltaY / deltaX) * 180 / pi;
-        cout << " Angle: ";
-        cout << angle;
-        cout << "\n";
+            
+        canonBody->setRotation(-angle);
+        canonStick->setRotation(-angle);
         
     }
 }

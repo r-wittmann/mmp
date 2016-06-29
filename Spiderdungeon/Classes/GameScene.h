@@ -16,13 +16,13 @@ public:
     private: float clickPositionY;
     private: float distance;
     private: float angle;
-    
+        
     // a selector callback
     void pauseGame(cocos2d::Ref* sender);
     void goToMainMenuScene(cocos2d::Ref* sender);
     
     void mouseClicked(cocos2d::Event* event);
-    void mouseDragged(cocos2d::Event* event);
+    void mouseDragged(cocos2d::Event* event, cocos2d::Sprite* canonBody, cocos2d::Sprite* canonStick);
     void mouseReleased(cocos2d::Event* event);
     
     // implement the "static create()" method manually
