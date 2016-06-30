@@ -50,14 +50,28 @@ bool GameScene::init()
     auto menu = Menu::create(pauseButton, menuButton, NULL);
     menu->setPosition(Point(origin.x + visibleSize.width - (pauseButton->getContentSize().width + menuButton->getContentSize().width),
                             origin.y + pauseButton->getContentSize().height / 2 + 5));
-    this->addChild(menu, 1);
+    this->addChild(menu, 2);
     
-    //ass background
-    auto background = Sprite::create("Level_LandschftBaum/Level_Baum.png");
+    //add background
+    auto background = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
     background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2 + 25));
     background->setScale(visibleSize.width / background->getContentSize().width, visibleSize.height / background->getContentSize().height);
     
     this->addChild(background, 0);
+    
+    //add Tree
+    auto tree = Sprite::create("Level_LandschftBaum/Baum.png");
+    tree->setPosition(Point(visibleSize.width - 20, visibleSize.height));
+    tree->setScale(0.9);
+    
+    this->addChild(tree);
+    
+    //add small Tree
+    auto smallTree = Sprite::create("Level_LandschftBaum/Baum.png");
+    smallTree->setPosition(Point(50, visibleSize.height / 2));
+    smallTree->setScale(0.3);
+    
+    this->addChild(smallTree);
     
     //create Canon
     auto canonBody = Sprite::create("Kanone/Kanone_Körper.png");
