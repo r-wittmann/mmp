@@ -66,6 +66,8 @@
 		9B0E51C41D20605700B52320 /* Buttons in Resources */ = {isa = PBXBuildFile; fileRef = 9B0E51C21D20605700B52320 /* Buttons */; };
 		9B0E51C81D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
 		9B0E51C91D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
+		9B1D898D1D24FA760019CFE4 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = 9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */; };
+		9B1D898E1D24FA760019CFE4 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = 9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
@@ -171,12 +173,13 @@
 		521A8E6319F0C34300D177D7 /* Default-736h@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-736h@3x.png"; sourceTree = "<group>"; };
 		521A8EA819F11F5000D177D7 /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; path = fonts; sourceTree = "<group>"; };
 		52B47A461A53D09B004E4C60 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk/System/Library/Frameworks/Security.framework; sourceTree = DEVELOPER_DIR; };
-		728DEDC21D1AEBD6001194FE /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GameScene.cpp; sourceTree = "<group>"; };
+		728DEDC21D1AEBD6001194FE /* GameScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; lineEnding = 0; path = GameScene.cpp; sourceTree = "<group>"; };
 		728DEDC31D1AEBD6001194FE /* GameScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GameScene.h; sourceTree = "<group>"; };
 		8262943D1AAF051F00CB7CF7 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		9B0E51C21D20605700B52320 /* Buttons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Buttons; sourceTree = "<group>"; };
 		9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HighscoreScene.cpp; sourceTree = "<group>"; };
 		9B0E51C71D206A4800B52320 /* HighscoreScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HighscoreScene.h; sourceTree = "<group>"; };
+		9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Level_LandschftBaum; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -499,6 +502,7 @@
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				46880B8119C43A67006E1F66 /* HelloWorld.png in Resources */,
 				46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */,
+				9B1D898D1D24FA760019CFE4 /* Level_LandschftBaum in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				521A8E6519F0C34300D177D7 /* Default-736h@3x.png in Resources */,
@@ -534,6 +538,7 @@
 				521A8EAA19F11F5000D177D7 /* fonts in Resources */,
 				46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */,
 				9B0E51C41D20605700B52320 /* Buttons in Resources */,
+				9B1D898E1D24FA760019CFE4 /* Level_LandschftBaum in Resources */,
 				46880B7E19C43A67006E1F66 /* CloseSelected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
