@@ -249,6 +249,11 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			line->setPosition(secondBubble);
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
+      auto lineBody = PhysicsBody::createBox(Size(dist + dist*0.5, 1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+      //lineBody->setRotation(degs);
+      lineBody->setDynamic(false);
+      line->setPhysicsBody(lineBody);
+      
 			this->addChild(line, 3);
 		}
 		if (i < 5) {
