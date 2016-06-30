@@ -3,6 +3,8 @@
 #include "chipmunk.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
+#include <cmath>
+#include <math.h>
 
 USING_NS_CC;
 using namespace std;
@@ -193,4 +195,85 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
     canonBody->runAction(rotateBody);
     canonStick->runAction(rotateStick);
     
+}
+void GameScene::drawSpiderWeb(Ref* sender) {
+	auto origin = Director::getInstance()->getVisibleOrigin();
+	auto winSize = Director::getInstance()->getVisibleSize();
+	auto level = 25;
+	// 3
+	_bubbles = Map<int, Sprite*>(25);
+	
+	float originX = winSize.width;
+	float originY = winSize.height+25;
+	int r = originX - originX*0.9;
+	float angle = M_PI;
+	float X; float Y;
+	for (int i = 0; i < level; i++) {
+		X = originX + cos(angle)*r;
+		Y = originY + sin(angle) *r;
+		_ball = Sprite::create("res/puck.png");
+		_ball->setScale(0.75);
+		_ball->setPosition(Vec2(X, Y));
+		_bubbles.insert(i, _ball);
+		this->addChild(_ball,4);
+		//int rowPos = i % 3;
+		angle = angle + (M_PI / 8);
+		if ((i % 5) == 4) {
+			angle = M_PI;
+			r = r + 30;
+		}
+
+	}
+	std::vector<int> mapKeyVec;
+	mapKeyVec = _bubbles.keys();
+	for (int i = 0; i < level; i++) {
+		if ((i % 5) < 4) {
+			cocos2d::Vec2 firstBubble = _bubbles.at(i)->getPosition();
+			cocos2d::Vec2 secondBubble = _bubbles.at(i + 1)->getPosition();
+
+			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
+			float rads = atan2f(diff.y, diff.x);
+			float degs = -CC_RADIANS_TO_DEGREES(rads);
+			float dist = ccpDistance(firstBubble, secondBubble);
+			CCSprite *line = Sprite::create("res/pix.png");
+			line->setAnchorPoint(ccp(0.0f, 0.5f));
+			line->setPosition(secondBubble);
+			line->setScaleX(dist + dist*0.50);
+			line->setRotation(degs);
+			this->addChild(line, 3);
+		}
+		if (i < 5) {
+			cocos2d::Vec2 firstBubble = ccp(originX, originY);
+			cocos2d::Vec2 secondBubble = _bubbles.at(i)->getPosition();
+
+			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
+			float rads = atan2f(diff.y, diff.x);
+			float degs = -CC_RADIANS_TO_DEGREES(rads);
+			float dist = ccpDistance(firstBubble, secondBubble);
+			CCSprite *line = Sprite::create("res/pix.png");
+			line->setAnchorPoint(ccp(0.0f, 0.5f));
+			line->setPosition(secondBubble);
+			line->setScaleX(dist + dist*0.50);
+			line->setRotation(degs);
+			this->addChild(line, 3);
+		}
+		else {
+			cocos2d::Vec2 firstBubble = _bubbles.at(i-5)->getPosition();
+			cocos2d::Vec2 secondBubble = _bubbles.at(i)->getPosition();
+
+			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
+			float rads = atan2f(diff.y, diff.x);
+			float degs = -CC_RADIANS_TO_DEGREES(rads);
+			float dist = ccpDistance(firstBubble, secondBubble);
+			CCSprite *line = Sprite::create("res/pix.png");
+			line->setAnchorPoint(ccp(0.0f, 0.5f));
+			line->setPosition(secondBubble);
+			line->setScaleX(dist + dist*0.50);
+			line->setRotation(degs);
+			this->addChild(line, 3);
+		}
+		
+	}
+	
+
 }
