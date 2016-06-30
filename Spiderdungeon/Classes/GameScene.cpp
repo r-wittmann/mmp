@@ -1,15 +1,19 @@
 #include <iostream>
 
+#include "chipmunk.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
 
 USING_NS_CC;
 using namespace std;
+using namespace cocos2d;
 
-cocos2d::Scene* GameScene::createScene()
+Scene* GameScene::createScene()
 {
   // 'scene' is an autorelease object
-  auto scene = cocos2d::Scene::create();
+  auto scene = Scene::createWithPhysics();
+  //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL); // TODO delete
+  //scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f)); // TODO delete
   
   // 'layer' is an autorelease object
   auto layer = GameScene::create();
@@ -33,23 +37,15 @@ bool GameScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin      = Director::getInstance()->getVisibleOrigin();
     
-    // create pause button and position relative to menu object
-    auto pauseButton = MenuItemImage::create(
-                                            "Buttons/pauseButton.png",
-                                            "Buttons/pauseButton.png",
-                                            CC_CALLBACK_1(GameScene::pauseGame, this));
-    
-    pauseButton->setPosition(Point::ZERO);
-    
     auto menuButton = MenuItemImage::create(
                                             "Buttons/mainMenuButtonSmall.png",
                                             "Buttons/mainMenuButtonSmall.png",
                                             CC_CALLBACK_1(GameScene::goToMainMenuScene, this));
-    menuButton->setPosition(Point(pauseButton->getContentSize().width + 5, 0));
 
-    auto menu = Menu::create(pauseButton, menuButton, NULL);
-    menu->setPosition(Point(origin.x + visibleSize.width - (pauseButton->getContentSize().width + menuButton->getContentSize().width),
-                            origin.y + pauseButton->getContentSize().height / 2 + 5));
+
+    auto menu = Menu::create(menuButton, NULL);
+    menu->setPosition(Point(origin.x + visibleSize.width - (menuButton->getContentSize().width / 2 + 5),
+                            origin.y + 25));
     this->addChild(menu, 2);
     
     //add background
@@ -97,14 +93,26 @@ bool GameScene::init()
     clicklistener->onMouseUp = CC_CALLBACK_1(GameScene::mouseReleased, this, canonStick, canonBody);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(clicklistener, this);
-
+  
+  
+  // Physics
+  
+  // Creating a static body
+  auto groundBody = PhysicsBody::createBox(
+                                           Size(visibleSize.width, 50.0f),
+                                           PhysicsMaterial(0.1f, 1.0f, 0.0f)
+                                           );
+  groundBody->setDynamic(false);
+  
+  // Attaching a body to a sprite
+  auto _ground = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
+  _ground->setPosition(Vec2(visibleSize.width / 2, 50.0f));
+  _ground->setOpacity(1);
+  this->addChild(_ground);
+  
+  _ground->setPhysicsBody(groundBody);
     
     return true;
-}
-
-void GameScene::pauseGame(Ref* sender)
-{
-    //not implemented yet
 }
 
 void GameScene::goToMainMenuScene(Ref* sender)
@@ -138,12 +146,11 @@ void GameScene::mouseDragged(Event* event, Sprite* canonStick, Sprite* canonBody
         distance = min(abs(distanceAnchorDrag - distanceAnchorClick), 50.0f);
 
         canonStick->setAnchorPoint(Point(0.5 + distance * 0.015, 0.5));
+      
+        angle = atan(deltaAnchorDragY / deltaAnchorDragX);
         
-        float pi = acos(-1);
-        angle = atan(deltaAnchorDragY / deltaAnchorDragX) * 180 / pi;
-        
-        canonBody->setRotation(-angle);
-        canonStick->setRotation(-angle);
+        canonBody->setRotation(CC_RADIANS_TO_DEGREES(-angle));
+        canonStick->setRotation(CC_RADIANS_TO_DEGREES(-angle));
         
     }
 }
@@ -151,7 +158,28 @@ void GameScene::mouseDragged(Event* event, Sprite* canonStick, Sprite* canonBody
 void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBody)
 {
     mouseDown = false;
-    // call function to fire canonball with angle and distance (distance is between 0 and 50)
+  
+  // call function to fire canonball with angle and distance (distance is between 0 and 50)
+  
+  // Creating a dynamic body
+  auto ballBody = PhysicsBody::createCircle(
+                                            100.0f,
+                                            PhysicsMaterial(0.1f, 0.2f, 0.0f)
+                                            );
+  ballBody->setMass(15.0f);
+  
+  auto _ball = Sprite::create("Kanone/Kanonen_Ball.png");
+  _ball->setScale(0.05);
+  _ball->setPosition(Point(origin.x + 100, origin.y + 95));
+  this->addChild(_ball, 1);
+  
+  _ball->setPhysicsBody(ballBody);
+  
+  // Applying a force
+  Vec2 force = Vec2(cos(angle) * distance * 100, sin(angle) * distance * 100);
+  
+  _ball->getPhysicsBody()->applyImpulse(force);
+  
     cout << "Angle: ";
     cout << angle;
     cout << " Force: ";
@@ -160,8 +188,8 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
     
     // move canon back to original position
     canonStick->setAnchorPoint(Point(0.5, 0.5));
-    auto rotateBody = RotateTo::create(2 * abs(angle) /90, 0);
-    auto rotateStick = RotateTo::create(2 * abs(angle) / 90, 0);
+    auto rotateBody = RotateTo::create(2 * abs(CC_RADIANS_TO_DEGREES(angle)) /90, 0);
+    auto rotateStick = RotateTo::create(2 * abs(CC_RADIANS_TO_DEGREES(angle)) / 90, 0);
     canonBody->runAction(rotateBody);
     canonStick->runAction(rotateStick);
     
