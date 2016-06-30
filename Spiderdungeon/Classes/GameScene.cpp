@@ -52,6 +52,13 @@ bool GameScene::init()
                             origin.y + pauseButton->getContentSize().height / 2 + 5));
     this->addChild(menu, 1);
     
+    //ass background
+    auto background = Sprite::create("Level_LandschftBaum/Level_Baum.png");
+    background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2 + 25));
+    background->setScale(visibleSize.width / background->getContentSize().width, visibleSize.height / background->getContentSize().height);
+    
+    this->addChild(background, 0);
+    
     //create Canon
     auto canonBody = Sprite::create("Kanone/Kanone_Körper.png");
     canonBody->setScale(0.2);

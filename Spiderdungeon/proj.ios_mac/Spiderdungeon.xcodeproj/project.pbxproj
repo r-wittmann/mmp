@@ -66,12 +66,13 @@
 		9B0E51C41D20605700B52320 /* Buttons in Resources */ = {isa = PBXBuildFile; fileRef = 9B0E51C21D20605700B52320 /* Buttons */; };
 		9B0E51C81D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
 		9B0E51C91D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
+		9B1D898D1D24FA760019CFE4 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = 9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */; };
+		9B1D898E1D24FA760019CFE4 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = 9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
 		BF1C47F01293687400B63C5D /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF1C47EA1293683800B63C5D /* QuartzCore.framework */; };
 		D35BE4FA1D1AFA7900256C6C /* Kanone in Resources */ = {isa = PBXBuildFile; fileRef = D35BE4F91D1AFA7900256C6C /* Kanone */; };
 		D35BE4FB1D1AFA7900256C6C /* Kanone in Resources */ = {isa = PBXBuildFile; fileRef = D35BE4F91D1AFA7900256C6C /* Kanone */; };
-		D37647BE1D22BD6F00DAEDF2 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = D37647BD1D22BD6F00DAEDF2 /* Level_LandschftBaum */; };
 		D44C620C132DFF330009C878 /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620B132DFF330009C878 /* OpenAL.framework */; };
 		D44C620E132DFF430009C878 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620D132DFF430009C878 /* AVFoundation.framework */; };
 		D44C6210132DFF4E0009C878 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D44C620F132DFF4E0009C878 /* AudioToolbox.framework */; };
@@ -175,11 +176,11 @@
 		9B0E51C21D20605700B52320 /* Buttons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Buttons; sourceTree = "<group>"; };
 		9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HighscoreScene.cpp; sourceTree = "<group>"; };
 		9B0E51C71D206A4800B52320 /* HighscoreScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HighscoreScene.h; sourceTree = "<group>"; };
+		9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Level_LandschftBaum; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		BF1C47EA1293683800B63C5D /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		D35BE4F91D1AFA7900256C6C /* Kanone */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Kanone; sourceTree = "<group>"; };
-		D37647BD1D22BD6F00DAEDF2 /* Level_LandschftBaum */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Level_LandschftBaum; sourceTree = "<group>"; };
 		D44C620B132DFF330009C878 /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 		D44C620D132DFF430009C878 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		D44C620F132DFF4E0009C878 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
@@ -308,7 +309,7 @@
 		46880B7519C43A67006E1F66 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				D37647BD1D22BD6F00DAEDF2 /* Level_LandschftBaum */,
+				9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */,
 				9B0E51C21D20605700B52320 /* Buttons */,
 				D35BE4F91D1AFA7900256C6C /* Kanone */,
 				521A8EA819F11F5000D177D7 /* fonts */,
@@ -493,6 +494,7 @@
 				5087E78317EB970100C73F5D /* Icon-152.png in Resources */,
 				46880B8119C43A67006E1F66 /* HelloWorld.png in Resources */,
 				46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */,
+				9B1D898D1D24FA760019CFE4 /* Level_LandschftBaum in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				521A8E6519F0C34300D177D7 /* Default-736h@3x.png in Resources */,
@@ -500,7 +502,6 @@
 				521A8EA919F11F5000D177D7 /* fonts in Resources */,
 				50EF62A317ECD613001EB2F8 /* Icon-50.png in Resources */,
 				5087E78017EB970100C73F5D /* Icon-114.png in Resources */,
-				D37647BE1D22BD6F00DAEDF2 /* Level_LandschftBaum in Resources */,
 				50EF62A217ECD613001EB2F8 /* Icon-29.png in Resources */,
 				50EF629617ECD46A001EB2F8 /* Icon-40.png in Resources */,
 				5087E78217EB970100C73F5D /* Icon-144.png in Resources */,
@@ -526,6 +527,7 @@
 				521A8EAA19F11F5000D177D7 /* fonts in Resources */,
 				46880B7C19C43A67006E1F66 /* CloseNormal.png in Resources */,
 				9B0E51C41D20605700B52320 /* Buttons in Resources */,
+				9B1D898E1D24FA760019CFE4 /* Level_LandschftBaum in Resources */,
 				46880B7E19C43A67006E1F66 /* CloseSelected.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
