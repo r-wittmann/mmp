@@ -14,8 +14,8 @@ Scene* GameScene::createScene()
 {
   // 'scene' is an autorelease object
   auto scene = Scene::createWithPhysics();
-  //scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL); // TODO delete
-  //scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f)); // TODO delete
+  scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL); // TODO delete
+  scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f)); // TODO delete
   
   // 'layer' is an autorelease object
   auto layer = GameScene::create();
@@ -172,7 +172,7 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
                                             100.0f,
                                             PhysicsMaterial(0.1f, 0.2f, 0.0f)
                                             );
-  ballBody->setMass(15.0f);
+  ballBody->setMass(10.0f);
   
   auto _canonball = Sprite::create("Kanone/Kanonen_Ball.png");
   _canonball->setScale(0.05);
@@ -218,6 +218,11 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 		_ball = Sprite::create("res/puck.png");
 		_ball->setScale(0.75);
 		_ball->setPosition(Vec2(X, Y));
+    auto ballBody = PhysicsBody::createCircle(_ball->getContentSize().width / 2,
+                                             PhysicsMaterial(0.1f, 1.0f, 0.0f)
+                                             );
+    ballBody->setDynamic(false);
+    _ball->setPhysicsBody(ballBody);
 		_bubbles.insert(i, _ball);
 		this->addChild(_ball,4);
 		//int rowPos = i % 3;
