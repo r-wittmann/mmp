@@ -19,10 +19,14 @@ public:
     private: float clickPositionY;
     private: float distance;
     private: float angle;
+public:
+	cocos2d::Sprite* _ball;
+	cocos2d::Map<int, cocos2d::Sprite*> _bubbles;
         
     // a selector callback
     void pauseGame(cocos2d::Ref* sender);
     void goToMainMenuScene(cocos2d::Ref* sender);
+	void drawSpiderWeb(cocos2d::Ref* sender);
     
     void mouseClicked(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
     void mouseDragged(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
