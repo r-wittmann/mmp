@@ -114,6 +114,10 @@ bool GameScene::init()
   
   _ground->setPhysicsBody(groundBody);
     
+
+	GameScene::drawSpiderWeb(this);
+  
+    
     return true;
 }
 
@@ -170,17 +174,17 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
                                             );
   ballBody->setMass(15.0f);
   
-  auto _ball = Sprite::create("Kanone/Kanonen_Ball.png");
-  _ball->setScale(0.05);
-  _ball->setPosition(Point(origin.x + 100, origin.y + 95));
-  this->addChild(_ball, 1);
+  auto _canonball = Sprite::create("Kanone/Kanonen_Ball.png");
+  _canonball->setScale(0.05);
+  _canonball->setPosition(Point(origin.x + 100, origin.y + 95));
+  this->addChild(_canonball, 1);
   
-  _ball->setPhysicsBody(ballBody);
+  _canonball->setPhysicsBody(ballBody);
   
   // Applying a force
   Vec2 force = Vec2(cos(angle) * distance * 100, sin(angle) * distance * 100);
   
-  _ball->getPhysicsBody()->applyImpulse(force);
+  _canonball->getPhysicsBody()->applyImpulse(force);
   
     cout << "Angle: ";
     cout << angle;
