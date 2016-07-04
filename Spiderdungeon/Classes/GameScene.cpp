@@ -248,12 +248,13 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			CCSprite *line = Sprite::create("res/pix.png");
             auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
             
+            line->setPhysicsBody(lineBody);
+
 			line->setAnchorPoint(ccp(0.0f, 0.5f));
 			line->setPosition(secondBubble);
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
             lineBody->setDynamic(false);
-            line->setPhysicsBody(lineBody);
       
 			this->addChild(line, 3);
 		}
@@ -269,12 +270,13 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			CCSprite *line = Sprite::create("res/pix.png");
 			auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
             
+            line->setPhysicsBody(lineBody);
+
             line->setAnchorPoint(ccp(0.0f, 0.5f));
 			line->setPosition(secondBubble);
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
             lineBody->setDynamic(false);
-            line->setPhysicsBody(lineBody);
 			
             this->addChild(line, 3);
 		}
@@ -288,14 +290,15 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			float dist = ccpDistance(firstBubble, secondBubble);
 			
             CCSprite *line = Sprite::create("res/pix.png");
-            auto lineBody = PhysicsBody::createBox(Size(1, 1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+            auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
             
+            line->setPhysicsBody(lineBody);
+
 			line->setAnchorPoint(ccp(0.0f, 0.5f));
 			line->setPosition(secondBubble);
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
             lineBody->setDynamic(false);
-            line->setPhysicsBody(lineBody);
 			
             this->addChild(line, 3);
 		}
