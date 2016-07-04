@@ -50,6 +50,13 @@ bool GameScene::init()
                             origin.y + 25));
     this->addChild(menu, 2);
     
+    //add highscore label
+    auto highScoreLabel = Label::createWithTTF("Score: " + to_string(scoreCount), "fonts/Marker Felt.ttf", 24);
+    highScoreLabel->setPosition(Point(origin.x + highScoreLabel->getContentSize().width + 1,
+                             origin.y + visibleSize.height - highScoreLabel->getContentSize().height - 1));
+    this->addChild(highScoreLabel, 1);
+
+    
     //add background
     auto background = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
     background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2 + 25));
