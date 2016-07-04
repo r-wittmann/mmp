@@ -116,8 +116,7 @@ bool GameScene::init()
     
 
 	GameScene::drawSpiderWeb(this);
-  
-    
+	GameScene::removeCertainElement(this, 22);
     return true;
 }
 
@@ -203,9 +202,9 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
 void GameScene::drawSpiderWeb(Ref* sender) {
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto winSize = Director::getInstance()->getVisibleSize();
-	auto level = 25;
+	level = 25;
 	// 3
-	_bubbles = Map<int, Sprite*>(25);
+	_bubbles = Map<int, Sprite*>(level);
 	
 	float originX = winSize.width;
 	float originY = winSize.height+25;
@@ -233,9 +232,8 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 		}
 
 	}
-	std::vector<int> mapKeyVec;
-	mapKeyVec = _bubbles.keys();
 	for (int i = 0; i < level; i++) {
+		Vector<Sprite*> linesVec(2);
 		if ((i % 5) < 4) {
 			cocos2d::Vec2 firstBubble = _bubbles.at(i)->getPosition();
 			cocos2d::Vec2 secondBubble = _bubbles.at(i + 1)->getPosition();
@@ -250,6 +248,8 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
 			this->addChild(line, 3);
+			linesVec.pushBack(line);
+
 		}
 		if (i < 5) {
 			cocos2d::Vec2 firstBubble = ccp(originX, originY);
@@ -265,9 +265,10 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
 			this->addChild(line, 3);
+			linesVec.pushBack(line);
 		}
 		else {
-			cocos2d::Vec2 firstBubble = _bubbles.at(i-5)->getPosition();
+			cocos2d::Vec2 firstBubble = _bubbles.at(i - 5)->getPosition();
 			cocos2d::Vec2 secondBubble = _bubbles.at(i)->getPosition();
 
 			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
@@ -280,9 +281,27 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
 			this->addChild(line, 3);
+			linesVec.pushBack(line);
 		}
-		
-	}
-	
 
+		_linesPerBubble[i] = linesVec;
+	}
+}
+void GameScene::removeCertainElement(Ref* sender, int bubble_hit) {
+	try {
+		if (bubble_hit < level) {
+			_bubbles.at(bubble_hit)->setOpacity(bubble_hit);
+			Vector<Sprite *> linesVec = _linesPerBubble.at(bubble_hit);
+			Vector<Sprite *> linesVecPrev = _linesPerBubble.at(bubble_hit-1);
+			for (auto sp : linesVec) {
+				cout << sp->getName();
+				sp->setOpacity(0);
+			}
+			auto Prev = linesVecPrev.front();
+			Prev->setOpacity(0);
+		}
+	}
+	catch (const std::out_of_range& oor) {
+		std::cerr << "Out of Range error: " << oor.what() << '\n';
+	}
 }
