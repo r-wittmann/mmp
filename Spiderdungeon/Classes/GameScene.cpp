@@ -221,7 +221,7 @@ void GameScene::drawSpiderWeb(Ref* sender) {
                                              PhysicsMaterial(0.1f, 1.0f, 0.0f)
                                              );
     ballBody->setDynamic(false);
-    _ball->setPhysicsBody(ballBody);
+    _ball->addComponent(ballBody);
 		_bubbles.insert(i, _ball);
 		this->addChild(_ball,4);
 		//int rowPos = i % 3;
@@ -290,7 +290,10 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 void GameScene::removeCertainElement(Ref* sender, int bubble_hit) {
 	try {
 		if (bubble_hit < level) {
-			_bubbles.at(bubble_hit)->setOpacity(bubble_hit);
+			//_bubbles.at(bubble_hit)->setOpacity(bubble_hit);
+			auto physics = _bubbles.at(bubble_hit)->getPhysicsBody();
+			_bubbles.at(bubble_hit)->removeFromParent();
+			
 			Vector<Sprite *> linesVec = _linesPerBubble.at(bubble_hit);
 			Vector<Sprite *> linesVecPrev = _linesPerBubble.at(bubble_hit-1);
 			for (auto sp : linesVec) {
