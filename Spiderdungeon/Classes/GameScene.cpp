@@ -241,12 +241,19 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
 			float rads = atan2f(diff.y, diff.x);
 			float degs = -CC_RADIANS_TO_DEGREES(rads);
-			float dist = ccpDistance(firstBubble, secondBubble);
+            float dist = ccpDistance(firstBubble, secondBubble);
+            
 			CCSprite *line = Sprite::create("res/pix.png");
+            auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+            
+            line->setPhysicsBody(lineBody);
+
 			line->setAnchorPoint(ccp(0.0f, 0.5f));
 			line->setPosition(secondBubble);
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
+            lineBody->setDynamic(false);
+      
 			this->addChild(line, 3);
 			linesVec.pushBack(line);
 
@@ -259,13 +266,20 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			float rads = atan2f(diff.y, diff.x);
 			float degs = -CC_RADIANS_TO_DEGREES(rads);
 			float dist = ccpDistance(firstBubble, secondBubble);
+            
 			CCSprite *line = Sprite::create("res/pix.png");
-			line->setAnchorPoint(ccp(0.0f, 0.5f));
+			auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+            
+            line->setPhysicsBody(lineBody);
+
+            line->setAnchorPoint(ccp(0.0f, 0.5f));
 			line->setPosition(secondBubble);
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
-			this->addChild(line, 3);
-			linesVec.pushBack(line);
+            lineBody->setDynamic(false);
+			
+            this->addChild(line, 3);
+            linesVec.pushBack(line);
 		}
 		else {
 			cocos2d::Vec2 firstBubble = _bubbles.at(i - 5)->getPosition();
@@ -275,13 +289,21 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 			float rads = atan2f(diff.y, diff.x);
 			float degs = -CC_RADIANS_TO_DEGREES(rads);
 			float dist = ccpDistance(firstBubble, secondBubble);
-			CCSprite *line = Sprite::create("res/pix.png");
+			
+            CCSprite *line = Sprite::create("res/pix.png");
+            auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+            
+            line->setPhysicsBody(lineBody);
+
 			line->setAnchorPoint(ccp(0.0f, 0.5f));
 			line->setPosition(secondBubble);
 			line->setScaleX(dist + dist*0.50);
 			line->setRotation(degs);
-			this->addChild(line, 3);
-			linesVec.pushBack(line);
+            lineBody->setDynamic(false);
+			
+            this->addChild(line, 3);
+            linesVec.pushBack(line);
+
 		}
 
 		_linesPerBubble[i] = linesVec;
