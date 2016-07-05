@@ -67,6 +67,8 @@
 		9B0E51C81D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
 		9B0E51C91D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
 		9B1D898D1D24FA760019CFE4 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = 9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */; };
+		9B2863171D2C5CEE0042CA29 /* Spinne in Resources */ = {isa = PBXBuildFile; fileRef = D396922D1D25926D007E4F13 /* Spinne */; };
+		9B2863181D2C5CEE0042CA29 /* Kanonen_Bälle in Resources */ = {isa = PBXBuildFile; fileRef = D396922A1D259258007E4F13 /* Kanonen_Bälle */; };
 		9B42556A1D2A7D6000EA4068 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = D37647BD1D22BD6F00DAEDF2 /* Level_LandschftBaum */; };
 		BF171245129291EC00B8313A /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB012928DE900B8313A /* OpenGLES.framework */; };
 		BF1712471292920000B8313A /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = BF170DB412928DE900B8313A /* libz.dylib */; };
@@ -531,6 +533,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B2863171D2C5CEE0042CA29 /* Spinne in Resources */,
+				9B2863181D2C5CEE0042CA29 /* Kanonen_Bälle in Resources */,
 				9B42556A1D2A7D6000EA4068 /* Level_LandschftBaum in Resources */,
 				46880B8219C43A67006E1F66 /* HelloWorld.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
