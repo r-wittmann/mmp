@@ -1,12 +1,15 @@
 #ifndef GameScene_h
 #define GameScene_h
 
+#include "chipmunk.h"
 #include "cocos2d.h"
 
 class GameScene : public cocos2d::Layer
 {
 public:
     static cocos2d::Scene* createScene();
+  
+  cpSpace* m_pSpace;
   
     virtual bool init();
     
@@ -19,10 +22,17 @@ public:
     private: float clickPositionY;
     private: float distance;
     private: float angle;
-        
+public:
+	cocos2d::Sprite* _ball;
+	cocos2d::Map<int, cocos2d::Sprite*> _bubbles;
+	std::map<int, cocos2d::Vector<cocos2d::Sprite*> > _linesPerBubble;
+	int level;
+       
     // a selector callback
     void pauseGame(cocos2d::Ref* sender);
     void goToMainMenuScene(cocos2d::Ref* sender);
+	void drawSpiderWeb(cocos2d::Ref* sender);
+	void removeCertainElement(cocos2d::Ref* sender, int bubble_hit);
     
     void mouseClicked(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
     void mouseDragged(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);

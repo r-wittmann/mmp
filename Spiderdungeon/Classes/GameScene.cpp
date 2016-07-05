@@ -1,15 +1,21 @@
 #include <iostream>
 
+#include "chipmunk.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
+#include <cmath>
+#include <math.h>
 
 USING_NS_CC;
 using namespace std;
+using namespace cocos2d;
 
-cocos2d::Scene* GameScene::createScene()
+Scene* GameScene::createScene()
 {
   // 'scene' is an autorelease object
-  auto scene = cocos2d::Scene::create();
+  auto scene = Scene::createWithPhysics();
+  scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL); // TODO delete
+  scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f)); // TODO delete
   
   // 'layer' is an autorelease object
   auto layer = GameScene::create();
@@ -33,23 +39,15 @@ bool GameScene::init()
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin      = Director::getInstance()->getVisibleOrigin();
     
-    // create pause button and position relative to menu object
-    auto pauseButton = MenuItemImage::create(
-                                            "Buttons/pauseButton.png",
-                                            "Buttons/pauseButton.png",
-                                            CC_CALLBACK_1(GameScene::pauseGame, this));
-    
-    pauseButton->setPosition(Point::ZERO);
-    
     auto menuButton = MenuItemImage::create(
                                             "Buttons/mainMenuButtonSmall.png",
                                             "Buttons/mainMenuButtonSmall.png",
                                             CC_CALLBACK_1(GameScene::goToMainMenuScene, this));
-    menuButton->setPosition(Point(pauseButton->getContentSize().width + 5, 0));
 
-    auto menu = Menu::create(pauseButton, menuButton, NULL);
-    menu->setPosition(Point(origin.x + visibleSize.width - (pauseButton->getContentSize().width + menuButton->getContentSize().width),
-                            origin.y + pauseButton->getContentSize().height / 2 + 5));
+
+    auto menu = Menu::create(menuButton, NULL);
+    menu->setPosition(Point(origin.x + visibleSize.width - (menuButton->getContentSize().width / 2 + 5),
+                            origin.y + 25));
     this->addChild(menu, 2);
     
     //add background
@@ -97,14 +95,29 @@ bool GameScene::init()
     clicklistener->onMouseUp = CC_CALLBACK_1(GameScene::mouseReleased, this, canonStick, canonBody);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(clicklistener, this);
-
+  
+  
+  // Physics
+  
+  // Creating a static body
+  auto groundBody = PhysicsBody::createBox(
+                                           Size(visibleSize.width, 50.0f),
+                                           PhysicsMaterial(0.1f, 1.0f, 0.0f)
+                                           );
+  groundBody->setDynamic(false);
+  
+  // Attaching a body to a sprite
+  auto _ground = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
+  _ground->setPosition(Vec2(visibleSize.width / 2, 50.0f));
+  _ground->setOpacity(1);
+  this->addChild(_ground);
+  
+  _ground->setPhysicsBody(groundBody);
     
-    return true;
-}
 
-void GameScene::pauseGame(Ref* sender)
-{
-    //not implemented yet
+	GameScene::drawSpiderWeb(this);
+	GameScene::removeCertainElement(this, 22);
+    return true;
 }
 
 void GameScene::goToMainMenuScene(Ref* sender)
@@ -138,12 +151,11 @@ void GameScene::mouseDragged(Event* event, Sprite* canonStick, Sprite* canonBody
         distance = min(abs(distanceAnchorDrag - distanceAnchorClick), 50.0f);
 
         canonStick->setAnchorPoint(Point(0.5 + distance * 0.015, 0.5));
+      
+        angle = atan(deltaAnchorDragY / deltaAnchorDragX);
         
-        float pi = acos(-1);
-        angle = atan(deltaAnchorDragY / deltaAnchorDragX) * 180 / pi;
-        
-        canonBody->setRotation(-angle);
-        canonStick->setRotation(-angle);
+        canonBody->setRotation(CC_RADIANS_TO_DEGREES(-angle));
+        canonStick->setRotation(CC_RADIANS_TO_DEGREES(-angle));
         
     }
 }
@@ -151,7 +163,28 @@ void GameScene::mouseDragged(Event* event, Sprite* canonStick, Sprite* canonBody
 void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBody)
 {
     mouseDown = false;
-    // call function to fire canonball with angle and distance (distance is between 0 and 50)
+  
+  // call function to fire canonball with angle and distance (distance is between 0 and 50)
+  
+  // Creating a dynamic body
+  auto ballBody = PhysicsBody::createCircle(
+                                            100.0f,
+                                            PhysicsMaterial(0.1f, 0.2f, 0.0f)
+                                            );
+  ballBody->setMass(10.0f);
+  
+  auto _canonball = Sprite::create("Kanone/Kanonen_Ball.png");
+  _canonball->setScale(0.05);
+  _canonball->setPosition(Point(origin.x + 100, origin.y + 95));
+  this->addChild(_canonball, 1);
+  
+  _canonball->setPhysicsBody(ballBody);
+  
+  // Applying a force
+  Vec2 force = Vec2(cos(angle) * distance * 100, sin(angle) * distance * 100);
+  
+  _canonball->getPhysicsBody()->applyImpulse(force);
+  
     cout << "Angle: ";
     cout << angle;
     cout << " Force: ";
@@ -160,9 +193,140 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
     
     // move canon back to original position
     canonStick->setAnchorPoint(Point(0.5, 0.5));
-    auto rotateBody = RotateTo::create(2 * abs(angle) /90, 0);
-    auto rotateStick = RotateTo::create(2 * abs(angle) / 90, 0);
+    auto rotateBody = RotateTo::create(2 * abs(CC_RADIANS_TO_DEGREES(angle)) /90, 0);
+    auto rotateStick = RotateTo::create(2 * abs(CC_RADIANS_TO_DEGREES(angle)) / 90, 0);
     canonBody->runAction(rotateBody);
     canonStick->runAction(rotateStick);
     
+}
+void GameScene::drawSpiderWeb(Ref* sender) {
+	auto origin = Director::getInstance()->getVisibleOrigin();
+	auto winSize = Director::getInstance()->getVisibleSize();
+	level = 25;
+	// 3
+	_bubbles = Map<int, Sprite*>(level);
+	
+	float originX = winSize.width;
+	float originY = winSize.height+25;
+	int r = originX - originX*0.9;
+	float angle = M_PI;
+	float X; float Y;
+	for (int i = 0; i < level; i++) {
+		X = originX + cos(angle)*r;
+		Y = originY + sin(angle) *r;
+		_ball = Sprite::create("res/puck.png");
+		_ball->setScale(0.75);
+		_ball->setPosition(Vec2(X, Y));
+    auto ballBody = PhysicsBody::createCircle(_ball->getContentSize().width / 2,
+                                             PhysicsMaterial(0.1f, 1.0f, 0.0f)
+                                             );
+    ballBody->setDynamic(false);
+    _ball->addComponent(ballBody);
+		_bubbles.insert(i, _ball);
+		this->addChild(_ball,4);
+		//int rowPos = i % 3;
+		angle = angle + (M_PI / 8);
+		if ((i % 5) == 4) {
+			angle = M_PI;
+			r = r + 30;
+		}
+
+	}
+	for (int i = 0; i < level; i++) {
+		Vector<Sprite*> linesVec(2);
+		if ((i % 5) < 4) {
+			cocos2d::Vec2 firstBubble = _bubbles.at(i)->getPosition();
+			cocos2d::Vec2 secondBubble = _bubbles.at(i + 1)->getPosition();
+
+			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
+			float rads = atan2f(diff.y, diff.x);
+			float degs = -CC_RADIANS_TO_DEGREES(rads);
+            float dist = ccpDistance(firstBubble, secondBubble);
+            
+			CCSprite *line = Sprite::create("res/pix.png");
+            auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+            
+            line->setPhysicsBody(lineBody);
+
+			line->setAnchorPoint(ccp(0.0f, 0.5f));
+			line->setPosition(secondBubble);
+			line->setScaleX(dist + dist*0.50);
+			line->setRotation(degs);
+            lineBody->setDynamic(false);
+      
+			this->addChild(line, 3);
+			linesVec.pushBack(line);
+
+		}
+		if (i < 5) {
+			cocos2d::Vec2 firstBubble = ccp(originX, originY);
+			cocos2d::Vec2 secondBubble = _bubbles.at(i)->getPosition();
+
+			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
+			float rads = atan2f(diff.y, diff.x);
+			float degs = -CC_RADIANS_TO_DEGREES(rads);
+			float dist = ccpDistance(firstBubble, secondBubble);
+            
+			CCSprite *line = Sprite::create("res/pix.png");
+			auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+            
+            line->setPhysicsBody(lineBody);
+
+            line->setAnchorPoint(ccp(0.0f, 0.5f));
+			line->setPosition(secondBubble);
+			line->setScaleX(dist + dist*0.50);
+			line->setRotation(degs);
+            lineBody->setDynamic(false);
+			
+            this->addChild(line, 3);
+            linesVec.pushBack(line);
+		}
+		else {
+			cocos2d::Vec2 firstBubble = _bubbles.at(i - 5)->getPosition();
+			cocos2d::Vec2 secondBubble = _bubbles.at(i)->getPosition();
+
+			cocos2d::Vec2 diff = ccpSub(firstBubble, secondBubble);
+			float rads = atan2f(diff.y, diff.x);
+			float degs = -CC_RADIANS_TO_DEGREES(rads);
+			float dist = ccpDistance(firstBubble, secondBubble);
+			
+            CCSprite *line = Sprite::create("res/pix.png");
+            auto lineBody = PhysicsBody::createBox(Size(0.5, 0.1), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+            
+            line->setPhysicsBody(lineBody);
+
+			line->setAnchorPoint(ccp(0.0f, 0.5f));
+			line->setPosition(secondBubble);
+			line->setScaleX(dist + dist*0.50);
+			line->setRotation(degs);
+            lineBody->setDynamic(false);
+			
+            this->addChild(line, 3);
+            linesVec.pushBack(line);
+
+		}
+
+		_linesPerBubble[i] = linesVec;
+	}
+}
+void GameScene::removeCertainElement(Ref* sender, int bubble_hit) {
+	try {
+		if (bubble_hit < level) {
+			//_bubbles.at(bubble_hit)->setOpacity(bubble_hit);
+			auto physics = _bubbles.at(bubble_hit)->getPhysicsBody();
+			_bubbles.at(bubble_hit)->removeFromParent();
+			
+			Vector<Sprite *> linesVec = _linesPerBubble.at(bubble_hit);
+			Vector<Sprite *> linesVecPrev = _linesPerBubble.at(bubble_hit-1);
+			for (auto sp : linesVec) {
+				cout << sp->getName();
+				sp->setOpacity(0);
+			}
+			auto Prev = linesVecPrev.front();
+			Prev->setOpacity(0);
+		}
+	}
+	catch (const std::out_of_range& oor) {
+		std::cerr << "Out of Range error: " << oor.what() << '\n';
+	}
 }
