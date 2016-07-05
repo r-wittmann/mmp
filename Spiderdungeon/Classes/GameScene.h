@@ -12,6 +12,7 @@ public:
   cpSpace* m_pSpace;
   
     virtual bool init();
+	virtual bool onContactBegin(cocos2d::PhysicsContact& contact);
     
     private: cocos2d::Point visibleSize;
     private: cocos2d::Vec2 origin;
