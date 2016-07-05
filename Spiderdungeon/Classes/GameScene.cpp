@@ -113,10 +113,17 @@ bool GameScene::init()
   this->addChild(_ground);
   
   _ground->setPhysicsBody(groundBody);
-    
+
+  auto _goldenSpider = Sprite::create("Spinne/Spinne_gold.png");
+  _goldenSpider->setScale(0.3f);
+  _goldenSpider->setAnchorPoint(Point(1.0, 1.0));
+  _goldenSpider->setPosition(Vec2(visibleSize.width, visibleSize.height));
+  this->addChild(_goldenSpider);
+  auto contactListener = EventListenerPhysicsContact::create();
+  contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContactBegin, this);
+  _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
 
 	GameScene::drawSpiderWeb(this);
-	GameScene::removeCertainElement(this, 22);
     return true;
 }
 
@@ -172,6 +179,7 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
                                             PhysicsMaterial(0.1f, 0.2f, 0.0f)
                                             );
   ballBody->setMass(10.0f);
+  ballBody->setContactTestBitmask(0xFFFFFFFF);
   
   auto _canonball = Sprite::create("Kanone/Kanonen_Ball.png");
   _canonball->setScale(0.05);
@@ -217,10 +225,12 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 		_ball = Sprite::create("res/puck.png");
 		_ball->setScale(0.75);
 		_ball->setPosition(Vec2(X, Y));
+		_ball->setTag(10);
     auto ballBody = PhysicsBody::createCircle(_ball->getContentSize().width / 2,
                                              PhysicsMaterial(0.1f, 1.0f, 0.0f)
                                              );
     ballBody->setDynamic(false);
+	ballBody->setContactTestBitmask(0xFFFFFF);
     _ball->addComponent(ballBody);
 		_bubbles.insert(i, _ball);
 		this->addChild(_ball,4);
@@ -311,22 +321,61 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 }
 void GameScene::removeCertainElement(Ref* sender, int bubble_hit) {
 	try {
+	//	MessageBox(NULL, "Contact!!!?");
 		if (bubble_hit < level) {
 			//_bubbles.at(bubble_hit)->setOpacity(bubble_hit);
-			auto physics = _bubbles.at(bubble_hit)->getPhysicsBody();
 			_bubbles.at(bubble_hit)->removeFromParent();
 			
 			Vector<Sprite *> linesVec = _linesPerBubble.at(bubble_hit);
 			Vector<Sprite *> linesVecPrev = _linesPerBubble.at(bubble_hit-1);
 			for (auto sp : linesVec) {
 				cout << sp->getName();
-				sp->setOpacity(0);
+				sp->removeFromParent();
 			}
 			auto Prev = linesVecPrev.front();
 			Prev->setOpacity(0);
+			Prev->removeFromParent();
 		}
 	}
 	catch (const std::out_of_range& oor) {
 		std::cerr << "Out of Range error: " << oor.what() << '\n';
 	}
+}
+bool GameScene::onContactBegin(PhysicsContact& contact)
+{
+	auto nodeA = contact.getShapeA()->getBody()->getNode();
+	auto nodeB = contact.getShapeB()->getBody()->getNode();
+	
+
+	if (nodeA && nodeB)
+	{
+		if (nodeA->getTag() == 10)
+		{
+			
+				if (dynamic_cast<Sprite*>(nodeA)) { //It is Sprite 
+					Sprite *target = dynamic_cast<Sprite*>(nodeA);
+					//Do whatever you like
+					std::vector<int> keys = _bubbles.keys(target);
+					for (auto key : keys) {
+						GameScene::removeCertainElement(this, key);
+					}
+				}
+			
+		}
+		else if (nodeB->getTag() == 10)
+		{
+			
+			if (dynamic_cast<Sprite*>(nodeB)) { //It is Sprite 
+				Sprite *target = dynamic_cast<Sprite*>(nodeB);
+				//Do whatever you like
+				std::vector<int> keys = _bubbles.keys(target);
+				for (auto key : keys) {
+					GameScene::removeCertainElement(this, key);
+				}
+			}
+		
+		}
+	}
+
+	return true;
 }
