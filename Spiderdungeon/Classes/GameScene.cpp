@@ -50,6 +50,14 @@ bool GameScene::init()
                             origin.y + 25));
     this->addChild(menu, 2);
     
+    //add highscore label
+    highScoreLabel = Label::createWithTTF("Score: " + to_string(scoreCount), "fonts/Marker Felt.ttf", 24);
+    highScoreLabel->setAnchorPoint(Point(0, 1));
+    highScoreLabel->setPosition(Point(origin.x + 10,
+                                      origin.y + visibleSize.height - 10));
+    this->addChild(highScoreLabel, 1);
+
+    
     //add background
     auto background = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
     background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2 + 25));
@@ -377,5 +385,9 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 		}
 	}
 
+    // count score
+    scoreCount += 10;
+    highScoreLabel->setString("Score: " + to_string(scoreCount));
+    
 	return true;
 }

@@ -17,6 +17,10 @@ public:
     private: cocos2d::Point visibleSize;
     private: cocos2d::Vec2 origin;
     
+    private: int scoreCount = 0;
+    private: cocos2d::Label* highScoreLabel;
+
+    
     // variables needed for click and drag calculations
     private: bool mouseDown = false;
     private: float clickPositionX;
