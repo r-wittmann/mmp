@@ -38,6 +38,8 @@ public:
     void goToMainMenuScene(cocos2d::Ref* sender);
 	void drawSpiderWeb(cocos2d::Ref* sender);
 	void removeCertainElement(cocos2d::Ref* sender, int bubble_hit);
+	void winLevel(cocos2d::Ref* sender);
+	void dumpSpider(cocos2d::Ref * sender, cocos2d::Sprite * spiderLine);
     
     void mouseClicked(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
     void mouseDragged(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
