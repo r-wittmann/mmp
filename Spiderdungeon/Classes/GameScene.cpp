@@ -120,18 +120,89 @@ bool GameScene::init()
   _ground->setOpacity(1);
   this->addChild(_ground);
   
-  _ground->setPhysicsBody(groundBody);
-
+  
+ 
   auto _goldenSpider = Sprite::create("Spinne/Spinne_gold.png");
-  _goldenSpider->setScale(0.3f);
+  auto spiderBody = PhysicsBody::createBox(
+	  Size(70.0f, 70.0f),
+	  PhysicsMaterial(0.1f, 1.0f, 0.0f)
+  );
+  spiderBody->setDynamic(false);
+  spiderBody->setContactTestBitmask(0xFFFFFFFF);
+  _goldenSpider->setPhysicsBody(spiderBody);
   _goldenSpider->setAnchorPoint(Point(1.0, 1.0));
-  _goldenSpider->setPosition(Vec2(visibleSize.width, visibleSize.height));
-  this->addChild(_goldenSpider);
+  _goldenSpider->setScale(0.17f);
+  _goldenSpider->setPosition(Vec2(visibleSize.width+5, visibleSize.height+30));
+  _goldenSpider->setTag(20);
+  
+  // load the Sprite Sheet
+  auto spritecache = SpriteFrameCache::getInstance();
+
+ 
+
+  auto spiderBlackBody = PhysicsBody::createBox(
+	  Size(70.0f, 70.0f),
+	  PhysicsMaterial(0.1f, 1.0f, 0.0f)
+  );
+  // the .plist file can be generated with any of the tools mentioned below
+  spritecache->addSpriteFramesWithFile("Spinne/Spinne.plist");
+  Vector<SpriteFrame*> animFrames;
+  animFrames.reserve(18);
+  char str[100];
+  for (int i = 1; i <= 18; i++)
+  {
+	  if (i < 10) {
+		  sprintf(str, "Spinne0%d.png", i);
+	  }
+	  else {
+		  sprintf(str, "Spinne%d.png", i);
+	  }
+
+	  animFrames.pushBack(spritecache->getSpriteFrameByName(str));
+  }
+
+  // create the animation out of the frames
+  Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+  Animate* animate = Animate::create(animation);
+  auto _Spider = Sprite::createWithSpriteFrame(animFrames.front());
+  spiderBlackBody->setDynamic(false);
+  _Spider->setPhysicsBody(spiderBlackBody);
+  _Spider->setAnchorPoint(Point(0.0, 0.0));
+  _Spider->setScale(0.17f);
+  _Spider->setPosition(Vec2(visibleSize.width /2, visibleSize.height + 30));
+  this->addChild(_Spider, 2);
+
+  //Spider_line:
+  CCSprite *spiderString = Sprite::create("res/pix2.png");
+  _Spider->addChild(spiderString, -1);
+  _Spider->runAction(RepeatForever::create(animate));
+  spiderString->setPosition(Vec2(135, 950));
+  spiderString->setScaleX(0.05f);
+  spiderString->setScaleY(4.2);
+  spiderString->setTag(40);
+  auto spiderStringSize = spiderString->getContentSize();
+  auto stringBody = PhysicsBody::createBox(Size(spiderStringSize.width, spiderStringSize.height),
+	  PhysicsMaterial(0.1f, 1.0f, 0.0f));
+  spiderString->setPhysicsBody(stringBody);
+  stringBody->setDynamic(false);
+  stringBody->setContactTestBitmask(0xFFFFFFFF);
+
+  //Animation
+
+  auto moveTo = MoveTo::create(10, Vec2(visibleSize.width /2, 0));
+  auto moveTo2 = MoveTo::create(10, Vec2(visibleSize.width / 2, visibleSize.height));
+  auto delay = DelayTime::create(2);
+  auto seq = Sequence::create(moveTo, delay, moveTo2, nullptr);
+  seq->setTag(1);
+_Spider->runAction(RepeatForever::create(seq));
+
+
+ 
+  this->addChild(_goldenSpider,6);
   auto contactListener = EventListenerPhysicsContact::create();
   contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContactBegin, this);
   _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
-
-	GameScene::drawSpiderWeb(this);
+	GameScene	  ::drawSpiderWeb(this);
     return true;
 }
 
@@ -216,9 +287,15 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
     
 }
 void GameScene::drawSpiderWeb(Ref* sender) {
+	//MessageBox(NULL, "contact");
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto winSize = Director::getInstance()->getVisibleSize();
-	level = 25;
+	if (level) {
+		level += 5;
+	}
+	else {
+		level = 25;
+	}
 	// 3
 	_bubbles = Map<int, Sprite*>(level);
 	
@@ -368,6 +445,7 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 						GameScene::removeCertainElement(this, key);
 					}
 				}
+				scoreCount += 10;
 			
 		}
 		else if (nodeB->getTag() == 10)
@@ -381,13 +459,82 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 					GameScene::removeCertainElement(this, key);
 				}
 			}
+			scoreCount += 10;
 		
 		}
+		if (nodeA->getTag() == 20) {
+			GameScene::winLevel(this);
+		}
+		else if (nodeB->getTag() == 20) {
+			GameScene::winLevel(this);
+		}
+		if (nodeA->getTag() == 40) {
+			if (dynamic_cast<Sprite*>(nodeA)) { //It is Sprite 
+				Sprite *target = dynamic_cast<Sprite*>(nodeA);
+				GameScene::dumpSpider(this, target);
+			}
+			return false;
+			
+		}
+		else if (nodeB->getTag() == 40) {
+			if (dynamic_cast<Sprite*>(nodeB)) { //It is Sprite 
+				Sprite *target = dynamic_cast<Sprite*>(nodeB);
+				GameScene::dumpSpider(this, target);
+				return false;
+			}
+			
+		}
+
 	}
 
+
     // count score
-    scoreCount += 10;
+   
     highScoreLabel->setString("Score: " + to_string(scoreCount));
     
 	return true;
+}
+void GameScene::winLevel(Ref *sender) {
+	try{
+	for (int i = 0; i < level; i++) {
+		if (_bubbles.at(i)) {
+			GameScene::removeCertainElement(this, i);
+		}
+		_bubbles.erase(i);
+		_linesPerBubble.erase(i);
+	}
+	
+		GameScene::drawSpiderWeb(this);
+	
+	
+
+}
+catch (const std::out_of_range& oor) {
+	std::cerr << "Out of Range error: " << oor.what() << '\n';
+}
+}
+void GameScene::dumpSpider(cocos2d::Ref * sender, cocos2d::Sprite * spiderLine) {
+	auto origin = Director::getInstance()->getVisibleOrigin();
+	auto visibleSize = Director::getInstance()->getVisibleSize();
+	auto spider = spiderLine->getParent();
+	auto fallDown = MoveTo::create(0, Vec2(visibleSize.width / 2, 0));
+	auto newSpiderLine = spiderLine;
+	spiderLine->retain();
+	spiderLine->removeFromParent();
+	auto moveDown = MoveTo::create(10, Vec2(visibleSize.width/ 2, 0));
+	auto moveTo2 = MoveTo::create(10, Vec2(visibleSize.width / 2, visibleSize.height));
+	auto moveUp = MoveTo::create(0, Vec2(visibleSize.width / 2, visibleSize.height +30));
+	auto delay = DelayTime::create(2);
+	auto delay2 = DelayTime::create(3);
+	//auto seq = Sequence::create( moveDown, delay, moveTo2, delay->clone(), nullptr);
+	auto seq2 = Sequence::create(fallDown, moveUp, nullptr);
+	auto seq = spider->getActionByTag(1);
+	spider->stopActionByTag(1);
+	spider->runAction(seq2);
+	spider->stopActionByTag(1);
+
+	spider->addChild(spiderLine);
+	spiderLine->release();
+
+
 }
