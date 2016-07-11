@@ -3,6 +3,7 @@
 #include "chipmunk.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
+#include "HighscoreScene.h"
 #include <cmath>
 #include <math.h>
 
@@ -56,8 +57,15 @@ bool GameScene::init()
     highScoreLabel->setPosition(Point(origin.x + 10,
                                       origin.y + visibleSize.height - 10));
     this->addChild(highScoreLabel, 1);
-
     
+    //add time label
+    timeLabel = Label::createWithTTF("Time: " + to_string(remainingTime), "fonts/Marker Felt.ttf", 24);
+    timeLabel->setAnchorPoint(Point(0, 1));
+    timeLabel->setPosition(Point(origin.x + 10,
+                                      origin.y + visibleSize.height - 10 - timeLabel->getContentSize().height));
+    this->addChild(timeLabel, 1);
+    this->schedule(schedule_selector(GameScene::updateTimer),1.0f);
+
     //add background
     auto background = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
     background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2 + 25));
@@ -537,4 +545,24 @@ void GameScene::dumpSpider(cocos2d::Ref * sender, cocos2d::Sprite * spiderLine) 
 	spiderLine->release();
 
 
+}
+
+void GameScene::updateTimer(float dt) {
+    if(remainingTime > 0) {
+        remainingTime -= 1;
+        timeLabel->setString("Time: " + to_string(remainingTime));
+        if (remainingTime <= 10) {
+            timeLabel->setColor(ccc3(255,0,0));
+        }
+    } else if (remainingTime > -2) {
+        remainingTime -= 1;
+        timeLabel->setString("Game Over");
+        
+        _eventDispatcher->removeAllEventListeners();
+        
+    } else {
+        this->unschedule(schedule_selector(GameScene::updateTimer));
+        auto scene = HighscoreScene::createScene();
+        Director::getInstance()->replaceScene(scene);
+    }
 }

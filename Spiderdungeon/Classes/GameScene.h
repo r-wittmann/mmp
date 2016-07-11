@@ -19,6 +19,10 @@ public:
     
     private: int scoreCount = 0;
     private: cocos2d::Label* highScoreLabel;
+    private: cocos2d::Label* timeLabel;
+    private: int remainingTime = 60;
+    
+    void updateTimer(float dt);
 
     
     // variables needed for click and drag calculations
