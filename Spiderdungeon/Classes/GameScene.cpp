@@ -164,26 +164,26 @@ bool GameScene::init()
   // create the animation out of the frames
   Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
   Animate* animate = Animate::create(animation);
-  auto _Spider = Sprite::createWithSpriteFrame(animFrames.front());
+  _movingSpider = Sprite::createWithSpriteFrame(animFrames.front());
   spiderBlackBody->setDynamic(false);
-  _Spider->setPhysicsBody(spiderBlackBody);
-  _Spider->setAnchorPoint(Point(0.0, 0.0));
-  _Spider->setScale(0.17f);
-  _Spider->setPosition(Vec2(visibleSize.width /2, visibleSize.height + 30));
-  this->addChild(_Spider, 2);
+  _movingSpider->setPhysicsBody(spiderBlackBody);
+  _movingSpider->setAnchorPoint(Point(0.0, 0.0));
+  _movingSpider->setScale(0.17f);
+  _movingSpider->setPosition(Vec2(visibleSize.width /2, visibleSize.height + 30));
+  this->addChild(_movingSpider, 2);
 
   //Spider_line:
-  CCSprite *spiderString = Sprite::create("res/pix2.png");
-  _Spider->addChild(spiderString, -1);
-  _Spider->runAction(RepeatForever::create(animate));
-  spiderString->setPosition(Vec2(135, 950));
-  spiderString->setScaleX(0.05f);
-  spiderString->setScaleY(4.2);
-  spiderString->setTag(40);
-  auto spiderStringSize = spiderString->getContentSize();
+  _movingSpiderLine = Sprite::create("res/pix2.png");
+  _movingSpider->addChild(_movingSpiderLine, -1);
+  _movingSpider->runAction(RepeatForever::create(animate));
+  _movingSpiderLine->setPosition(Vec2(135, 950));
+  _movingSpiderLine->setScaleX(0.05f);
+  _movingSpiderLine->setScaleY(4.2);
+  _movingSpiderLine->setTag(40);
+  auto spiderStringSize = _movingSpiderLine->getContentSize();
   auto stringBody = PhysicsBody::createBox(Size(spiderStringSize.width, spiderStringSize.height),
 	  PhysicsMaterial(0.1f, 1.0f, 0.0f));
-  spiderString->setPhysicsBody(stringBody);
+  _movingSpiderLine->setPhysicsBody(stringBody);
   stringBody->setDynamic(false);
   stringBody->setContactTestBitmask(0xFFFFFFFF);
 
@@ -194,7 +194,7 @@ bool GameScene::init()
   auto delay = DelayTime::create(2);
   auto seq = Sequence::create(moveTo, delay, moveTo2, nullptr);
   seq->setTag(1);
-_Spider->runAction(RepeatForever::create(seq));
+_movingSpider->runAction(RepeatForever::create(seq));
 
 
  
@@ -287,17 +287,18 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
     
 }
 void GameScene::drawSpiderWeb(Ref* sender) {
-	//MessageBox(NULL, "contact");
+	
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto winSize = Director::getInstance()->getVisibleSize();
 	if (level) {
 		level += 5;
+		MessageBox(NULL, "new Level");
 	}
 	else {
-		level = 25;
+		level = 5;
 	}
 	// 3
-	_bubbles = Map<int, Sprite*>(level);
+	 _bubbles = Map<int, Sprite*>(level);
 	
 	float originX = winSize.width;
 	float originY = winSize.height+25;
@@ -307,7 +308,7 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 	for (int i = 0; i < level; i++) {
 		X = originX + cos(angle)*r;
 		Y = originY + sin(angle) *r;
-		_ball = Sprite::create("res/puck.png");
+		 auto _ball = Sprite::create("res/puck.png");
 		_ball->setScale(0.75);
 		_ball->setPosition(Vec2(X, Y));
 		_ball->setTag(10);
@@ -318,7 +319,11 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 	ballBody->setContactTestBitmask(0xFFFFFF);
     _ball->addComponent(ballBody);
 		_bubbles.insert(i, _ball);
+		_ball->retain();
 		this->addChild(_ball,4);
+		if (_ball->getParent() == this) {
+		//	MessageBox(NULL, "should have added ball!");
+		}
 		//int rowPos = i % 3;
 		angle = angle + (M_PI / 8);
 		if ((i % 5) == 4) {
@@ -409,17 +414,20 @@ void GameScene::removeCertainElement(Ref* sender, int bubble_hit) {
 	//	MessageBox(NULL, "Contact!!!?");
 		if (bubble_hit < level) {
 			//_bubbles.at(bubble_hit)->setOpacity(bubble_hit);
-			_bubbles.at(bubble_hit)->removeFromParent();
+			_bubbles.at(bubble_hit)->removeFromParentAndCleanup(true);
 			
 			Vector<Sprite *> linesVec = _linesPerBubble.at(bubble_hit);
 			Vector<Sprite *> linesVecPrev = _linesPerBubble.at(bubble_hit-1);
 			for (auto sp : linesVec) {
-				cout << sp->getName();
-				sp->removeFromParent();
+				if (sp) {
+					sp->removeFromParentAndCleanup(true);
+				}
 			}
 			auto Prev = linesVecPrev.front();
-			Prev->setOpacity(0);
-			Prev->removeFromParent();
+			if (Prev) {
+				Prev->removeFromParentAndCleanup(true);
+
+			}
 		}
 	}
 	catch (const std::out_of_range& oor) {
@@ -464,8 +472,10 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 		}
 		if (nodeA->getTag() == 20) {
 			GameScene::winLevel(this);
+			GameScene::test(Director::getInstance()->getRunningScene());
 		}
 		else if (nodeB->getTag() == 20) {
+			GameScene::test(Director::getInstance()->getRunningScene());
 			GameScene::winLevel(this);
 		}
 		if (nodeA->getTag() == 40) {
@@ -498,13 +508,26 @@ void GameScene::winLevel(Ref *sender) {
 	try{
 	for (int i = 0; i < level; i++) {
 		if (_bubbles.at(i)) {
-			GameScene::removeCertainElement(this, i);
+			_bubbles.at(i)->removeFromParentAndCleanup(true);
+		}
+		Vector<Sprite *> linesVec = _linesPerBubble.at(i);
+		for (auto line : linesVec) {
+			if (line) {
+				line->removeFromParentAndCleanup(true);
+			}
 		}
 		_bubbles.erase(i);
 		_linesPerBubble.erase(i);
 	}
-	
-		GameScene::drawSpiderWeb(this);
+	if (_bubbles.empty() && _linesPerBubble.empty()) {
+		auto scene = Director::getInstance()->getRunningScene();
+		GameScene::drawSpiderWeb(scene);
+
+	}
+	else {
+		MessageBox(NULL, "error");
+
+	}
 	
 	
 
@@ -521,20 +544,68 @@ void GameScene::dumpSpider(cocos2d::Ref * sender, cocos2d::Sprite * spiderLine) 
 	auto newSpiderLine = spiderLine;
 	spiderLine->retain();
 	spiderLine->removeFromParent();
-	auto moveDown = MoveTo::create(10, Vec2(visibleSize.width/ 2, 0));
-	auto moveTo2 = MoveTo::create(10, Vec2(visibleSize.width / 2, visibleSize.height));
 	auto moveUp = MoveTo::create(0, Vec2(visibleSize.width / 2, visibleSize.height +30));
-	auto delay = DelayTime::create(2);
-	auto delay2 = DelayTime::create(3);
-	//auto seq = Sequence::create( moveDown, delay, moveTo2, delay->clone(), nullptr);
-	auto seq2 = Sequence::create(fallDown, moveUp, nullptr);
-	auto seq = spider->getActionByTag(1);
-	spider->stopActionByTag(1);
+	auto delay2 = DelayTime::create(1.5);
+	auto seq2 = Sequence::create(fallDown, delay2, moveUp, nullptr);
 	spider->runAction(seq2);
 	spider->stopActionByTag(1);
+	scheduleOnce(schedule_selector(GameScene::addSpiderLineAgain), 5.0);
+	
+}
+void GameScene::addSpiderLineAgain(float dt) {
+	_movingSpider->addChild(_movingSpiderLine);
+	_movingSpiderLine->release();
+}
 
-	spider->addChild(spiderLine);
-	spiderLine->release();
 
+void GameScene::test(Ref* sender) {
+	MessageBox(NULL, "test");
 
+	auto origin = Director::getInstance()->getVisibleOrigin();
+	auto winSize = Director::getInstance()->getVisibleSize();
+	if (level) {
+		level += 5;
+		MessageBox(NULL, "new Level");
+	}
+	else {
+		level = 5;
+	}
+	// 3
+	_bubbles = Map<int, Sprite*>(level);
+
+	float originX = winSize.width;
+	float originY = winSize.height + 25;
+	int r = originX - originX*0.9;
+	float angle = M_PI;
+	float X; float Y;
+	auto test = Sprite::create("res/puck.png");
+	test->setPosition(Vec2(500.0f, 500.0f));
+	this->addChild(test,6);
+	/*for (int i = 0; i < level; i++) {
+		X = originX + cos(angle)*r;
+		Y = originY + sin(angle) *r;
+		auto _ball = Sprite::create("res/puck.png");
+		_ball->setScale(0.75);
+		_ball->setPosition(Vec2(X, Y));
+		_ball->setTag(10);
+		auto ballBody = PhysicsBody::createCircle(_ball->getContentSize().width / 2,
+			PhysicsMaterial(0.1f, 1.0f, 0.0f)
+		);
+		ballBody->setDynamic(false);
+		ballBody->setContactTestBitmask(0xFFFFFF);
+		_ball->addComponent(ballBody);
+		_bubbles.insert(i, _ball);
+		_ball->retain();
+		this->addChild(_ball, 4);
+		if (_ball->getParent() == this) {
+			//	MessageBox(NULL, "should have added ball!");
+		}
+		//int rowPos = i % 3;
+		angle = angle + (M_PI / 8);
+		if ((i % 5) == 4) {
+			angle = M_PI;
+			r = r + 30;
+		}
+
+	}*/
 }
