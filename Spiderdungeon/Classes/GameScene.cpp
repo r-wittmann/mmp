@@ -6,6 +6,8 @@
 #include "HighscoreScene.h"
 #include <cmath>
 #include <math.h>
+#include <iostream>
+#include <fstream>
 
 USING_NS_CC;
 using namespace std;
@@ -562,6 +564,17 @@ void GameScene::updateTimer(float dt) {
         
     } else {
         this->unschedule(schedule_selector(GameScene::updateTimer));
+        
+        ofstream outfile;
+        outfile.open("highscore.txt", ios::out | ios::app);
+        if (outfile.is_open())
+        {
+            outfile << "\n" + to_string(scoreCount);
+            outfile.close();
+        }
+        string line;
+        
+        
         auto scene = HighscoreScene::createScene();
         Director::getInstance()->replaceScene(scene);
     }
