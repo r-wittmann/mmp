@@ -17,7 +17,7 @@ Scene* GameScene::createScene()
 {
     // 'scene' is an autorelease object
     auto scene = Scene::createWithPhysics();
-    scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f)); // TODO delete
+    scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -350.0f));
     
     // 'layer' is an autorelease object
     auto layer = GameScene::create();
@@ -115,106 +115,99 @@ bool GameScene::init()
     clicklistener->onMouseUp = CC_CALLBACK_1(GameScene::mouseReleased, this, canonStick, canonBody);
     
     _eventDispatcher->addEventListenerWithSceneGraphPriority(clicklistener, this);
-  
-  
-  // Physics
-  
-  // Creating a static body
-  auto groundBody = PhysicsBody::createBox(
-                                           Size(visibleSize.width, 50.0f),
-                                           PhysicsMaterial(0.1f, 1.0f, 0.0f)
-                                           );
-  groundBody->setDynamic(false);
-  
-  // Attaching a body to a sprite
-  auto _ground = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
-  _ground->setPosition(Vec2(visibleSize.width / 2, 50.0f));
-  _ground->setOpacity(1);
-  this->addChild(_ground);
-  
-  
- 
-  auto _goldenSpider = Sprite::create("Spinne/Spinne_gold.png");
-  auto spiderBody = PhysicsBody::createBox(
-	  Size(70.0f, 70.0f),
-	  PhysicsMaterial(0.1f, 1.0f, 0.0f)
-  );
-  spiderBody->setDynamic(false);
-  spiderBody->setContactTestBitmask(0xFFFFFFFF);
-  _goldenSpider->setPhysicsBody(spiderBody);
-  _goldenSpider->setAnchorPoint(Point(1.0, 1.0));
-  _goldenSpider->setScale(0.17f);
-  _goldenSpider->setPosition(Vec2(visibleSize.width+5, visibleSize.height+30));
-  _goldenSpider->setTag(20);
-  
-  // load the Sprite Sheet
-  auto spritecache = SpriteFrameCache::getInstance();
-
- 
-
-  auto spiderBlackBody = PhysicsBody::createBox(
-	  Size(70.0f, 70.0f),
-	  PhysicsMaterial(0.1f, 1.0f, 0.0f)
-  );
-  // the .plist file can be generated with any of the tools mentioned below
-  spritecache->addSpriteFramesWithFile("Spinne/Spinne.plist");
-  Vector<SpriteFrame*> animFrames;
-  animFrames.reserve(18);
-  char str[100];
-  for (int i = 1; i <= 18; i++)
-  {
-	  if (i < 10) {
-		  sprintf(str, "Spinne0%d.png", i);
-	  }
-	  else {
-		  sprintf(str, "Spinne%d.png", i);
-	  }
-
-	  animFrames.pushBack(spritecache->getSpriteFrameByName(str));
-  }
-
-  // create the animation out of the frames
-  Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
-  Animate* animate = Animate::create(animation);
-  _movingSpider = Sprite::createWithSpriteFrame(animFrames.front());
-  spiderBlackBody->setDynamic(false);
-  _movingSpider->setPhysicsBody(spiderBlackBody);
-  _movingSpider->setAnchorPoint(Point(0.0, 0.0));
-  _movingSpider->setScale(0.17f);
-  _movingSpider->setPosition(Vec2(visibleSize.width /2, visibleSize.height + 30));
-  this->addChild(_movingSpider, 2);
-
-  //Spider_line:
-  _movingSpiderLine = Sprite::create("res/pix2.png");
-  _movingSpider->addChild(_movingSpiderLine, -1);
-  _movingSpider->runAction(RepeatForever::create(animate));
-  _movingSpiderLine->setPosition(Vec2(135, 950));
-  _movingSpiderLine->setScaleX(0.05f);
-  _movingSpiderLine->setScaleY(4.2);
-  _movingSpiderLine->setTag(40);
-  auto spiderStringSize = _movingSpiderLine->getContentSize();
-  auto stringBody = PhysicsBody::createBox(Size(spiderStringSize.width, spiderStringSize.height),
-	  PhysicsMaterial(0.1f, 1.0f, 0.0f));
-  _movingSpiderLine->setPhysicsBody(stringBody);
-  stringBody->setDynamic(false);
-  stringBody->setContactTestBitmask(0xFFFFFFFF);
-
-  //Animation
-
-  auto moveTo = MoveTo::create(10, Vec2(visibleSize.width /2, 0));
-  auto moveTo2 = MoveTo::create(10, Vec2(visibleSize.width / 2, visibleSize.height));
-  auto delay = DelayTime::create(2);
-  auto seq = Sequence::create(moveTo, delay, moveTo2, nullptr);
-  seq->setTag(1);
-_movingSpider->runAction(RepeatForever::create(seq));
-
-
- 
-  this->addChild(_goldenSpider,6);
-  auto contactListener = EventListenerPhysicsContact::create();
-  contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContactBegin, this);
-  _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
-	GameScene	  ::drawSpiderWeb(this);
+    
+    
+    // Physics
+    
+    //Following code is not working properly
+//    // Creating a static body
+//    auto groundBody = PhysicsBody::createBox(
+//                                             Size(visibleSize.width, 50.0f),
+//                                             PhysicsMaterial(0.1f, 1.0f, 0.0f)
+//                                             );
+//    groundBody->setDynamic(false);
+//    
+//    // Attaching a body to a sprite
+//    auto _ground = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
+//    _ground->setPosition(Vec2(visibleSize.width / 2, 50.0f));
+//    _ground->setOpacity(1);
+//    this->addChild(_ground);
+    
+    
+    
+    auto _goldenSpider = Sprite::create("Spinne/Spinne_gold.png");
+    auto spiderBody = PhysicsBody::createBox(Size(70.0f, 70.0f), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+    
+    spiderBody->setDynamic(false);
+    spiderBody->setContactTestBitmask(0xFFFFFFFF);
+    _goldenSpider->setPhysicsBody(spiderBody);
+    _goldenSpider->setAnchorPoint(Point(1.0, 1.0));
+    _goldenSpider->setScale(0.17f);
+    _goldenSpider->setPosition(Vec2(visibleSize.width+5, visibleSize.height+30));
+    _goldenSpider->setTag(20);
+    
+    // load the Sprite Sheet
+    auto spritecache = SpriteFrameCache::getInstance();
+    
+    auto spiderBlackBody = PhysicsBody::createBox(Size(70.0f, 70.0f), PhysicsMaterial(0.1f, 1.0f, 0.0f));
+    
+    // the .plist file can be generated with any of the tools mentioned below
+    spritecache->addSpriteFramesWithFile("Spinne/Spinne.plist");
+    Vector<SpriteFrame*> animFrames;
+    animFrames.reserve(18);
+    char str[100];
+    for (int i = 1; i <= 18; i++) {
+        if (i < 10) {
+            sprintf(str, "Spinne0%d.png", i);
+        }
+        else {
+            sprintf(str, "Spinne%d.png", i);
+        }
+        animFrames.pushBack(spritecache->getSpriteFrameByName(str));
+    }
+    
+    // create the animation out of the frames
+    Animation* animation = Animation::createWithSpriteFrames(animFrames, 0.1f);
+    Animate* animate = Animate::create(animation);
+    _movingSpider = Sprite::createWithSpriteFrame(animFrames.front());
+    spiderBlackBody->setDynamic(false);
+    _movingSpider->setPhysicsBody(spiderBlackBody);
+    _movingSpider->setAnchorPoint(Point(0.0, 0.0));
+    _movingSpider->setScale(0.17f);
+    _movingSpider->setPosition(Vec2(visibleSize.width /2, visibleSize.height + 30));
+    this->addChild(_movingSpider, 2);
+    
+    //Spider_line:
+    _movingSpiderLine = Sprite::create("res/pix2.png");
+    _movingSpider->addChild(_movingSpiderLine, -1);
+    _movingSpider->runAction(RepeatForever::create(animate));
+    _movingSpiderLine->setPosition(Vec2(135, 950));
+    _movingSpiderLine->setScaleX(0.05f);
+    _movingSpiderLine->setScaleY(4.2);
+    _movingSpiderLine->setTag(40);
+    auto spiderStringSize = _movingSpiderLine->getContentSize();
+    auto stringBody = PhysicsBody::createBox(Size(spiderStringSize.width, spiderStringSize.height),
+                                             PhysicsMaterial(0.1f, 1.0f, 0.0f));
+    _movingSpiderLine->setPhysicsBody(stringBody);
+    stringBody->setDynamic(false);
+    stringBody->setContactTestBitmask(0xFFFFFFFF);
+    
+    //Animation
+    
+    auto moveTo = MoveTo::create(10, Vec2(visibleSize.width /2, 0));
+    auto moveTo2 = MoveTo::create(10, Vec2(visibleSize.width / 2, visibleSize.height));
+    auto delay = DelayTime::create(2);
+    auto seq = Sequence::create(moveTo, delay, moveTo2, nullptr);
+    seq->setTag(1);
+    _movingSpider->runAction(RepeatForever::create(seq));
+    
+    
+    
+    this->addChild(_goldenSpider,6);
+    auto contactListener = EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onContactBegin, this);
+    _eventDispatcher->addEventListenerWithSceneGraphPriority(contactListener, this);
+    GameScene	  ::drawSpiderWeb(this);
     return true;
 }
 
@@ -262,13 +255,9 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
 {
     mouseDown = false;
     
-    // call function to fire canonball with angle and distance (distance is between 0 and 50)
-    
     // Creating a dynamic body
-    auto ballBody = PhysicsBody::createCircle(
-                                              100.0f,
-                                              PhysicsMaterial(0.1f, 0.2f, 0.0f)
-                                              );
+    auto ballBody = PhysicsBody::createCircle(100.0f, PhysicsMaterial(0.1f, 0.2f, 0.0f));
+    
     ballBody->setMass(10.0f);
     ballBody->setContactTestBitmask(0xFFFFFFFF);
     
@@ -297,8 +286,7 @@ void GameScene::drawSpiderWeb(Ref* sender) {
     
     CCUserDefault *def=CCUserDefault::sharedUserDefault();
     
-    int i = def->getIntegerForKey("level");
-    level = i;
+    level = def->getIntegerForKey("level");
     _bubbles = Map<int, Sprite*>(level);
     
     float originX = winSize.width;
@@ -313,9 +301,8 @@ void GameScene::drawSpiderWeb(Ref* sender) {
         _ball->setScale(0.75);
         _ball->setPosition(Vec2(X, Y));
         _ball->setTag(10);
-        auto ballBody = PhysicsBody::createCircle(_ball->getContentSize().width / 2,
-                                                  PhysicsMaterial(0.1f, 1.0f, 0.0f)
-                                                  );
+        auto ballBody = PhysicsBody::createCircle(_ball->getContentSize().width / 2, PhysicsMaterial(0.1f, 1.0f, 0.0f));
+        
         ballBody->setDynamic(false);
         ballBody->setContactTestBitmask(0xFFFFFF);
         _ball->addComponent(ballBody);
@@ -433,18 +420,14 @@ void GameScene::removeCertainElement(Ref* sender, int bubble_hit) {
 }
 bool GameScene::onContactBegin(PhysicsContact& contact)
 {
-	auto nodeA = contact.getShapeA()->getBody()->getNode();
-	auto nodeB = contact.getShapeB()->getBody()->getNode();
-	
-
-	if (nodeA && nodeB)
-	{
-		if (nodeA->getTag() == 10)
-		{
-			
-            if (dynamic_cast<Sprite*>(nodeA)) { //It is Sprite
+    auto nodeA = contact.getShapeA()->getBody()->getNode();
+    auto nodeB = contact.getShapeB()->getBody()->getNode();
+    
+    
+    if (nodeA && nodeB) {
+        if (nodeA->getTag() == 10) {
+            if (dynamic_cast<Sprite*>(nodeA)) {
                 Sprite *target = dynamic_cast<Sprite*>(nodeA);
-                //Do whatever you like
                 std::vector<int> keys = _bubbles.keys(target);
                 for (auto key : keys) {
                     GameScene::removeCertainElement(this, key);
@@ -452,55 +435,49 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
             }
             CCUserDefault *def=CCUserDefault::sharedUserDefault();
             def-> setIntegerForKey("score", def->getIntegerForKey("score") + 10);
-			
-		}
-		else if (nodeB->getTag() == 10)
-		{
-			
-			if (dynamic_cast<Sprite*>(nodeB)) { //It is Sprite 
-				Sprite *target = dynamic_cast<Sprite*>(nodeB);
-				//Do whatever you like
-				std::vector<int> keys = _bubbles.keys(target);
-				for (auto key : keys) {
-					GameScene::removeCertainElement(this, key);
-				}
-			}
+            
+        } else if (nodeB->getTag() == 10) {
+            if (dynamic_cast<Sprite*>(nodeB)) {
+                Sprite *target = dynamic_cast<Sprite*>(nodeB);
+                std::vector<int> keys = _bubbles.keys(target);
+                for (auto key : keys) {
+                    GameScene::removeCertainElement(this, key);
+                }
+            }
             CCUserDefault *def=CCUserDefault::sharedUserDefault();
             def-> setIntegerForKey("score", def->getIntegerForKey("score") + 10);
-
-		
-		}
-		if (nodeA->getTag() == 20) {
+            
+            
+        }
+        if (nodeA->getTag() == 20) {
             this->unschedule(schedule_selector(GameScene::updateTimer));
             this->schedule(schedule_selector(GameScene::countRemainingTime),0.02f);
-			//GameScene::winLevel(Director::getInstance()->getRunningScene());
-		}
-		else if (nodeB->getTag() == 20) {
+        }
+        else if (nodeB->getTag() == 20) {
             this->unschedule(schedule_selector(GameScene::updateTimer));
             this->schedule(schedule_selector(GameScene::countRemainingTime),0.02f);
-			//GameScene::winLevel(Director::getInstance()->getRunningScene());
-		}
+        }
         
-		if (nodeA->getTag() == 40) {
-			if (dynamic_cast<Sprite*>(nodeA)) { //It is Sprite 
-				Sprite *target = dynamic_cast<Sprite*>(nodeA);
-				GameScene::dumpSpider(this, target);
-			}
-			return false;
-			
-		}
-		else if (nodeB->getTag() == 40) {
-			if (dynamic_cast<Sprite*>(nodeB)) { //It is Sprite 
-				Sprite *target = dynamic_cast<Sprite*>(nodeB);
-				GameScene::dumpSpider(this, target);
-				return false;
-			}
-			
-		}
-
-	}
-
-
+        if (nodeA->getTag() == 40) {
+            if (dynamic_cast<Sprite*>(nodeA)) {
+                Sprite *target = dynamic_cast<Sprite*>(nodeA);
+                GameScene::dumpSpider(this, target);
+            }
+            return false;
+            
+        }
+        else if (nodeB->getTag() == 40) {
+            if (dynamic_cast<Sprite*>(nodeB)) {
+                Sprite *target = dynamic_cast<Sprite*>(nodeB);
+                GameScene::dumpSpider(this, target);
+                return false;
+            }
+            
+        }
+        
+    }
+    
+    
     // count score
     
     CCUserDefault *def=CCUserDefault::sharedUserDefault();
@@ -515,10 +492,11 @@ void GameScene::countRemainingTime(float dt){
         GameScene::winLevel(this);
     } else {
         CCUserDefault *def=CCUserDefault::sharedUserDefault();
+        remainingTime -= 1;
+
         def-> setIntegerForKey("score", def->getIntegerForKey("score") + 10);
         timeLabel->setString("Time: " + to_string(remainingTime));
         highScoreLabel->setString("Score: " + to_string(def ->getIntegerForKey("score")));
-        remainingTime -= 1;
     }
 }
 void GameScene::winLevel(Ref *sender) {
@@ -546,8 +524,7 @@ void GameScene::winLevel(Ref *sender) {
     _bubbles.clear();
     _linesPerBubble.clear();
     
-    int i = def->getIntegerForKey("level");
-    def-> setIntegerForKey("level", i + 5);
+    def-> setIntegerForKey("level", def->getIntegerForKey("level") + 5);
     def->flush();
     
     auto scene = GameScene::createScene();
@@ -558,16 +535,15 @@ void GameScene::dumpSpider(cocos2d::Ref * sender, cocos2d::Sprite * spiderLine) 
     auto origin = Director::getInstance()->getVisibleOrigin();
     auto visibleSize = Director::getInstance()->getVisibleSize();
     auto spider = spiderLine->getParent();
-    auto fallDown = MoveTo::create(0, Vec2(visibleSize.width / 2, 0));
-    auto newSpiderLine = spiderLine;
+    auto fallDown = MoveTo::create(2, Vec2(visibleSize.width / 2, 0));
     spiderLine->retain();
     spiderLine->removeFromParent();
     auto moveUp = MoveTo::create(0, Vec2(visibleSize.width / 2, visibleSize.height +30));
     auto delay2 = DelayTime::create(1.5);
-    auto seq2 = Sequence::create(fallDown, delay2, moveUp, nullptr);
-    spider->runAction(seq2);
+    auto seq = Sequence::create(fallDown, delay2, moveUp, nullptr);
+    spider->runAction(seq);
     spider->stopActionByTag(1);
-    scheduleOnce(schedule_selector(GameScene::addSpiderLineAgain), 5.0);
+    scheduleOnce(schedule_selector(GameScene::addSpiderLineAgain), 4.0);
     
 }
 void GameScene::addSpiderLineAgain(float dt) {
