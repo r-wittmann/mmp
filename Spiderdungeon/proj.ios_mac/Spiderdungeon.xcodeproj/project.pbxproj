@@ -66,6 +66,8 @@
 		9B0E51C41D20605700B52320 /* Buttons in Resources */ = {isa = PBXBuildFile; fileRef = 9B0E51C21D20605700B52320 /* Buttons */; };
 		9B0E51C81D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
 		9B0E51C91D206A4800B52320 /* HighscoreScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */; };
+		9B10F5121D33C78400C150F9 /* highscore.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9B10F5111D33C78400C150F9 /* highscore.txt */; };
+		9B10F5131D33C78400C150F9 /* highscore.txt in Resources */ = {isa = PBXBuildFile; fileRef = 9B10F5111D33C78400C150F9 /* highscore.txt */; };
 		9B1D898D1D24FA760019CFE4 /* Level_LandschftBaum in Resources */ = {isa = PBXBuildFile; fileRef = 9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */; };
 		9B2863171D2C5CEE0042CA29 /* Spinne in Resources */ = {isa = PBXBuildFile; fileRef = D396922D1D25926D007E4F13 /* Spinne */; };
 		9B2863181D2C5CEE0042CA29 /* Kanonen_Bälle in Resources */ = {isa = PBXBuildFile; fileRef = D396922A1D259258007E4F13 /* Kanonen_Bälle */; };
@@ -181,6 +183,7 @@
 		9B0E51C21D20605700B52320 /* Buttons */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Buttons; sourceTree = "<group>"; };
 		9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = HighscoreScene.cpp; sourceTree = "<group>"; };
 		9B0E51C71D206A4800B52320 /* HighscoreScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HighscoreScene.h; sourceTree = "<group>"; };
+		9B10F5111D33C78400C150F9 /* highscore.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = highscore.txt; sourceTree = "<group>"; };
 		9B1D898C1D24FA760019CFE4 /* Level_LandschftBaum */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Level_LandschftBaum; sourceTree = "<group>"; };
 		BF170DB012928DE900B8313A /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		BF170DB412928DE900B8313A /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -335,6 +338,7 @@
 		46880B8319C43A87006E1F66 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				9B10F5111D33C78400C150F9 /* highscore.txt */,
 				46880B8419C43A87006E1F66 /* AppDelegate.cpp */,
 				46880B8519C43A87006E1F66 /* AppDelegate.h */,
 				9B0E51C61D206A4800B52320 /* HighscoreScene.cpp */,
@@ -506,6 +510,7 @@
 				46880B7D19C43A67006E1F66 /* CloseSelected.png in Resources */,
 				9B1D898D1D24FA760019CFE4 /* Level_LandschftBaum in Resources */,
 				5087E77D17EB970100C73F5D /* Default-568h@2x.png in Resources */,
+				9B10F5121D33C78400C150F9 /* highscore.txt in Resources */,
 				5087E78517EB970100C73F5D /* Icon-72.png in Resources */,
 				521A8E6519F0C34300D177D7 /* Default-736h@3x.png in Resources */,
 				D35BE4FA1D1AFA7900256C6C /* Kanone in Resources */,
@@ -536,6 +541,7 @@
 				9B2863171D2C5CEE0042CA29 /* Spinne in Resources */,
 				9B2863181D2C5CEE0042CA29 /* Kanonen_Bälle in Resources */,
 				9B42556A1D2A7D6000EA4068 /* Level_LandschftBaum in Resources */,
+				9B10F5131D33C78400C150F9 /* highscore.txt in Resources */,
 				46880B8219C43A67006E1F66 /* HelloWorld.png in Resources */,
 				503AE0F817EB97AB00D1A890 /* Icon.icns in Resources */,
 				3EACC99019EE6D4300EB3C5E /* res in Resources */,

@@ -29,6 +29,11 @@ bool MainMenuScene::init()
     {
         return false;
     }
+    
+    CCUserDefault *def=CCUserDefault::sharedUserDefault();
+    def ->setIntegerForKey("level", 5);
+    def ->setIntegerForKey("score", 0);
+    def ->flush();
 
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin      = Director::getInstance()->getVisibleOrigin();

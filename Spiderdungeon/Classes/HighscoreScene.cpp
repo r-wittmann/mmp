@@ -1,5 +1,8 @@
 #include "HighscoreScene.h"
 #include "MainMenuScene.h"
+#include <iostream>
+#include <fstream>
+#include <list>
 
 USING_NS_CC;
 
@@ -28,28 +31,57 @@ bool HighscoreScene::init()
     {
         return false;
     }
-
-  
-  int score = 3000; // TODO replace with actual score
-  
-  CCUserDefault *def=CCUserDefault::sharedUserDefault();
-  long int high_score=0;
-  if(score>high_score)
-  {
-    def->setIntegerForKey(HIGH_SCORE, score);
-    //def->flush();
-    //high_score=def->getIntegerForKey(HIGH_SCORE);
-  }
-  high_score=def->getIntegerForKey(HIGH_SCORE);
-  
-  char s[7];
-  sprintf(s,"%ld", high_score);
-  CCLabelTTF *high_label=CCLabelTTF::create(s, "arial.ttf", 20);
-  high_label->setPosition(ccp(200, 200));
-  this->addChild(high_label,2);
-
+    
+    std::string line;
+    int i = 0;
+    
+    std::ifstream myfile ("highscore.txt");
+    if (myfile.is_open())
+    {
+        while ( getline (myfile,line) )
+        {
+            highscoreLines.push_back(std::stoi(line));
+            i++;
+        }
+        myfile.close();
+    } else std::cout << "Unable to open file";
+    highscoreLines.sort(std::greater<int>());
+    
     auto visibleSize = Director::getInstance()->getVisibleSize();
     Vec2 origin      = Director::getInstance()->getVisibleOrigin();
+    
+    auto pos1 = Label::createWithTTF("1st: " + std::to_string(highscoreLines.front()), "fonts/Marker Felt.ttf", 16);
+    pos1->setPosition(Point(origin.x + visibleSize.width/2,
+                             origin.y + visibleSize.height/2 + 70 ));
+    this->addChild(pos1, 1);
+    
+    highscoreLines.pop_front();
+    
+    auto pos2 = Label::createWithTTF("2nd: " + std::to_string(highscoreLines.front()), "fonts/Marker Felt.ttf", 16);
+    pos2->setPosition(Point(origin.x + visibleSize.width/2,
+                            origin.y + visibleSize.height/2 + 50 ));
+    this->addChild(pos2, 1);
+    
+    highscoreLines.pop_front();
+    
+    auto pos3 = Label::createWithTTF("3rd: " + std::to_string(highscoreLines.front()), "fonts/Marker Felt.ttf", 16);
+    pos3->setPosition(Point(origin.x + visibleSize.width/2,
+                            origin.y + visibleSize.height/2 + 30 ));
+    this->addChild(pos3, 1);
+
+    highscoreLines.pop_front();
+    
+    auto pos4 = Label::createWithTTF("4th: " + std::to_string(highscoreLines.front()), "fonts/Marker Felt.ttf", 16);
+    pos4->setPosition(Point(origin.x + visibleSize.width/2,
+                            origin.y + visibleSize.height/2 + 10 ));
+    this->addChild(pos4, 1);
+    
+    highscoreLines.pop_front();
+    
+    auto pos5 = Label::createWithTTF("5th: " + std::to_string(highscoreLines.front()), "fonts/Marker Felt.ttf", 16);
+    pos5->setPosition(Point(origin.x + visibleSize.width/2,
+                            origin.y + visibleSize.height/2 -10 ));
+    this->addChild(pos5, 1);
     
     
     // create main menu button and position relative to menu object

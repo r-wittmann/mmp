@@ -3,8 +3,11 @@
 #include "chipmunk.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
+#include "HighscoreScene.h"
 #include <cmath>
 #include <math.h>
+#include <iostream>
+#include <fstream>
 
 USING_NS_CC;
 using namespace std;
@@ -51,13 +54,23 @@ bool GameScene::init()
     this->addChild(menu, 2);
     
     //add highscore label
-    highScoreLabel = Label::createWithTTF("Score: " + to_string(scoreCount), "fonts/Marker Felt.ttf", 24);
+    CCUserDefault *def=CCUserDefault::sharedUserDefault();
+    
+    int i = def->getIntegerForKey("score");
+    highScoreLabel = Label::createWithTTF("Score: " + to_string(i), "fonts/Marker Felt.ttf", 24);
     highScoreLabel->setAnchorPoint(Point(0, 1));
     highScoreLabel->setPosition(Point(origin.x + 10,
                                       origin.y + visibleSize.height - 10));
     this->addChild(highScoreLabel, 1);
-
     
+    //add time label
+    timeLabel = Label::createWithTTF("Time: " + to_string(remainingTime), "fonts/Marker Felt.ttf", 24);
+    timeLabel->setAnchorPoint(Point(0, 1));
+    timeLabel->setPosition(Point(origin.x + 10,
+                                      origin.y + visibleSize.height - 10 - timeLabel->getContentSize().height));
+    this->addChild(timeLabel, 1);
+    this->schedule(schedule_selector(GameScene::updateTimer),1.0f);
+
     //add background
     auto background = Sprite::create("Level_LandschftBaum/Level_Baum_ohneBaum.png");
     background->setPosition(Point(visibleSize.width / 2, visibleSize.height / 2 + 25));
@@ -284,21 +297,17 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
     auto rotateStick = RotateTo::create(2 * abs(CC_RADIANS_TO_DEGREES(angle)) / 90, 0);
     canonBody->runAction(rotateBody);
     canonStick->runAction(rotateStick);
-    
 }
 void GameScene::drawSpiderWeb(Ref* sender) {
-	
+	cout << "drawSpiderWeb";
 	auto origin = Director::getInstance()->getVisibleOrigin();
 	auto winSize = Director::getInstance()->getVisibleSize();
-	if (level) {
-		level += 5;
-		MessageBox(NULL, "new Level");
-	}
-	else {
-		level = 5;
-	}
-	// 3
-	 _bubbles = Map<int, Sprite*>(level);
+    
+    CCUserDefault *def=CCUserDefault::sharedUserDefault();
+    
+    int i = def->getIntegerForKey("level");
+    level = i;
+    _bubbles = Map<int, Sprite*>(level);
 	
 	float originX = winSize.width;
 	float originY = winSize.height+25;
@@ -321,9 +330,6 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 		_bubbles.insert(i, _ball);
 		_ball->retain();
 		this->addChild(_ball,4);
-		if (_ball->getParent() == this) {
-		//	MessageBox(NULL, "should have added ball!");
-		}
 		//int rowPos = i % 3;
 		angle = angle + (M_PI / 8);
 		if ((i % 5) == 4) {
@@ -411,7 +417,6 @@ void GameScene::drawSpiderWeb(Ref* sender) {
 }
 void GameScene::removeCertainElement(Ref* sender, int bubble_hit) {
 	try {
-	//	MessageBox(NULL, "Contact!!!?");
 		if (bubble_hit < level) {
 			//_bubbles.at(bubble_hit)->setOpacity(bubble_hit);
 			_bubbles.at(bubble_hit)->removeFromParentAndCleanup(true);
@@ -453,7 +458,8 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 						GameScene::removeCertainElement(this, key);
 					}
 				}
-				scoreCount += 10;
+            CCUserDefault *def=CCUserDefault::sharedUserDefault();
+            def-> setIntegerForKey("score", def->getIntegerForKey("score") + 10);
 			
 		}
 		else if (nodeB->getTag() == 10)
@@ -467,16 +473,16 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 					GameScene::removeCertainElement(this, key);
 				}
 			}
-			scoreCount += 10;
+            CCUserDefault *def=CCUserDefault::sharedUserDefault();
+            def-> setIntegerForKey("score", def->getIntegerForKey("score") + 10);
+
 		
 		}
 		if (nodeA->getTag() == 20) {
-			GameScene::winLevel(this);
-			GameScene::test(Director::getInstance()->getRunningScene());
+			GameScene::winLevel(Director::getInstance()->getRunningScene());
 		}
 		else if (nodeB->getTag() == 20) {
-			GameScene::test(Director::getInstance()->getRunningScene());
-			GameScene::winLevel(this);
+			GameScene::winLevel(Director::getInstance()->getRunningScene());
 		}
 		if (nodeA->getTag() == 40) {
 			if (dynamic_cast<Sprite*>(nodeA)) { //It is Sprite 
@@ -499,8 +505,10 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 
 
     // count score
+    
+    CCUserDefault *def=CCUserDefault::sharedUserDefault();
    
-    highScoreLabel->setString("Score: " + to_string(scoreCount));
+    highScoreLabel->setString("Score: " + to_string(def ->getIntegerForKey("score")));
     
 	return true;
 }
@@ -519,15 +527,14 @@ void GameScene::winLevel(Ref *sender) {
 		_bubbles.erase(i);
 		_linesPerBubble.erase(i);
 	}
-	if (_bubbles.empty() && _linesPerBubble.empty()) {
-		auto scene = Director::getInstance()->getRunningScene();
-		GameScene::drawSpiderWeb(scene);
-
-	}
-	else {
-		MessageBox(NULL, "error");
-
-	}
+//	if (_bubbles.empty() && _linesPerBubble.empty()) {
+//		auto scene = Director::getInstance()->getRunningScene();
+//		GameScene::drawSpiderWeb(scene);
+//
+//	}
+//	else {
+//
+//	}
 	
 	
 
@@ -535,6 +542,19 @@ void GameScene::winLevel(Ref *sender) {
 catch (const std::out_of_range& oor) {
 	std::cerr << "Out of Range error: " << oor.what() << '\n';
 }
+    CCUserDefault *def=CCUserDefault::sharedUserDefault();
+    def-> setIntegerForKey("score", def->getIntegerForKey("score") + 300);
+
+    _bubbles.clear();
+    _linesPerBubble.clear();
+    
+    int i = def->getIntegerForKey("level");
+    def-> setIntegerForKey("level", i + 5);
+    def->flush();
+    
+    auto scene = GameScene::createScene();
+    Director::getInstance()->replaceScene(scene);
+    
 }
 void GameScene::dumpSpider(cocos2d::Ref * sender, cocos2d::Sprite * spiderLine) {
 	auto origin = Director::getInstance()->getVisibleOrigin();
@@ -557,55 +577,40 @@ void GameScene::addSpiderLineAgain(float dt) {
 	_movingSpiderLine->release();
 }
 
-
-void GameScene::test(Ref* sender) {
-	MessageBox(NULL, "test");
-
-	auto origin = Director::getInstance()->getVisibleOrigin();
-	auto winSize = Director::getInstance()->getVisibleSize();
-	if (level) {
-		level += 5;
-		MessageBox(NULL, "new Level");
-	}
-	else {
-		level = 5;
-	}
-	// 3
-	_bubbles = Map<int, Sprite*>(level);
-
-	float originX = winSize.width;
-	float originY = winSize.height + 25;
-	int r = originX - originX*0.9;
-	float angle = M_PI;
-	float X; float Y;
-	auto test = Sprite::create("res/puck.png");
-	test->setPosition(Vec2(500.0f, 500.0f));
-	this->addChild(test,6);
-	/*for (int i = 0; i < level; i++) {
-		X = originX + cos(angle)*r;
-		Y = originY + sin(angle) *r;
-		auto _ball = Sprite::create("res/puck.png");
-		_ball->setScale(0.75);
-		_ball->setPosition(Vec2(X, Y));
-		_ball->setTag(10);
-		auto ballBody = PhysicsBody::createCircle(_ball->getContentSize().width / 2,
-			PhysicsMaterial(0.1f, 1.0f, 0.0f)
-		);
-		ballBody->setDynamic(false);
-		ballBody->setContactTestBitmask(0xFFFFFF);
-		_ball->addComponent(ballBody);
-		_bubbles.insert(i, _ball);
-		_ball->retain();
-		this->addChild(_ball, 4);
-		if (_ball->getParent() == this) {
-			//	MessageBox(NULL, "should have added ball!");
-		}
-		//int rowPos = i % 3;
-		angle = angle + (M_PI / 8);
-		if ((i % 5) == 4) {
-			angle = M_PI;
-			r = r + 30;
-		}
-
-	}*/
+void GameScene::updateTimer(float dt) {
+    if(remainingTime > 0) {
+        remainingTime -= 1;
+        timeLabel->setString("Time: " + to_string(remainingTime));
+        if (remainingTime <= 10) {
+            timeLabel->setColor(ccc3(255,0,0));
+        }
+    } else if (remainingTime > -2) {
+        remainingTime -= 1;
+        timeLabel->setString("Game Over");
+        
+        _eventDispatcher->removeAllEventListeners();
+        
+    } else {
+        this->unschedule(schedule_selector(GameScene::updateTimer));
+        
+        CCUserDefault *def=CCUserDefault::sharedUserDefault();
+        
+        ofstream outfile;
+        outfile.open("highscore.txt", ios::out | ios::app);
+        if (outfile.is_open())
+        {
+            outfile << "\n" + to_string(def-> getIntegerForKey("score"));
+            outfile.close();
+        }
+        string line;
+        
+        
+        def-> setIntegerForKey("level", 5);
+        def-> setIntegerForKey("score", 0);
+        def->flush();
+        
+        
+        auto scene = HighscoreScene::createScene();
+        Director::getInstance()->replaceScene(scene);
+    }
 }

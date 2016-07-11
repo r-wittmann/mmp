@@ -17,8 +17,12 @@ public:
     private: cocos2d::Point visibleSize;
     private: cocos2d::Vec2 origin;
     
-    private: int scoreCount = 0;
+    private: int scoreCount;
     private: cocos2d::Label* highScoreLabel;
+    private: cocos2d::Label* timeLabel;
+    private: int remainingTime = 60;
+    
+    void updateTimer(float dt);
 
     
     // variables needed for click and drag calculations
@@ -44,7 +48,6 @@ public:
 	void winLevel(cocos2d::Ref* sender);
 	void dumpSpider(cocos2d::Ref * sender, cocos2d::Sprite * spiderLine);
 	void addSpiderLineAgain(float dt);
-	void test(Ref* sender);
 	
     void mouseClicked(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
     void mouseDragged(cocos2d::Event* event, cocos2d::Sprite* canonStick, cocos2d::Sprite* canonBody);
