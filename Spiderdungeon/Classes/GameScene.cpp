@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "chipmunk.h"
+#include "SimpleAudioEngine.h"
 #include "GameScene.h"
 #include "MainMenuScene.h"
 #include "HighscoreScene.h"
@@ -262,6 +263,9 @@ void GameScene::mouseDragged(Event* event, Sprite* canonStick, Sprite* canonBody
 void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBody)
 {
     mouseDown = false;
+	auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+	audio->preloadEffect("res/shot.wav");
+	audio->playEffect("res/shot.wav", false, 1.0f, 1.0f, 1.0f);
   
   // call function to fire canonball with angle and distance (distance is between 0 and 50)
   
@@ -273,7 +277,12 @@ void GameScene::mouseReleased(Event* event, Sprite* canonStick, Sprite* canonBod
   ballBody->setMass(10.0f);
   ballBody->setContactTestBitmask(0xFFFFFFFF);
   
+  //Particle
+  auto emitter = ParticleSmoke::create();  
+  emitter->setDuration(0.2f);
   auto _canonball = Sprite::create("Kanone/Kanonen_Ball.png");
+  _canonball->addChild(emitter, 10);
+
   _canonball->setScale(0.05);
   _canonball->setPosition(Point(origin.x + 100, origin.y + 95));
   this->addChild(_canonball, 1);
@@ -447,13 +456,26 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 
 	if (nodeA && nodeB)
 	{
+		auto emitter = ParticleExplosion::create();
+		emitter->setEmitterMode(ParticleSystem::Mode::RADIUS);
+		emitter->setStartRadiusVar(100);
+		emitter->setEndRadiusVar(100);
+		auto audio = CocosDenshion::SimpleAudioEngine::getInstance();
+		audio->preloadEffect("res/plopp.wav");
+		audio->preloadEffect("res/gong.wav");
+
 		if (nodeA->getTag() == 10)
 		{
-			
+			audio->playEffect("res/plopp.wav", false, 1.0f, 1.0f, 1.0f);
+
 				if (dynamic_cast<Sprite*>(nodeA)) { //It is Sprite 
 					Sprite *target = dynamic_cast<Sprite*>(nodeA);
 					//Do whatever you like
 					std::vector<int> keys = _bubbles.keys(target);
+					Node* test = Sprite::create("res/pix.png");
+					//test->setOpacity(0);
+					test->setPosition(target->getPosition());
+					test->addChild(emitter, 10);
 					for (auto key : keys) {
 						GameScene::removeCertainElement(this, key);
 					}
@@ -464,11 +486,16 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 		}
 		else if (nodeB->getTag() == 10)
 		{
-			
+			audio->playEffect("res/plopp.wav", false, 1.0f, 1.0f, 1.0f);
+
 			if (dynamic_cast<Sprite*>(nodeB)) { //It is Sprite 
 				Sprite *target = dynamic_cast<Sprite*>(nodeB);
 				//Do whatever you like
 				std::vector<int> keys = _bubbles.keys(target);
+				Node* test = Sprite::create("res/pix.png");
+				//test->setOpacity(0);
+				test->setPosition(target->getPosition());
+				test->addChild(emitter, 10);
 				for (auto key : keys) {
 					GameScene::removeCertainElement(this, key);
 				}
@@ -480,9 +507,11 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
 		}
 		if (nodeA->getTag() == 20) {
 			GameScene::winLevel(Director::getInstance()->getRunningScene());
+			audio->playEffect("res/gong.wav", false, 1.0f, 1.0f, 1.0f);
 		}
 		else if (nodeB->getTag() == 20) {
 			GameScene::winLevel(Director::getInstance()->getRunningScene());
+			audio->playEffect("res/gong.wav", false, 1.0f, 1.0f, 1.0f);
 		}
 		if (nodeA->getTag() == 40) {
 			if (dynamic_cast<Sprite*>(nodeA)) { //It is Sprite 
