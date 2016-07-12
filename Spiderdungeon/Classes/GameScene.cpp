@@ -478,12 +478,12 @@ bool GameScene::onContactBegin(PhysicsContact& contact)
         if (nodeA->getTag() == 20) {
 			audio->playEffect("res/gong.wav", false, 1.0f, 1.0f, 1.0f);
             this->unschedule(schedule_selector(GameScene::updateTimer));
-            this->schedule(schedule_selector(GameScene::countRemainingTime),0.02f);
+            this->schedule(schedule_selector(GameScene::countRemainingTime),0.05f);
         }
         else if (nodeB->getTag() == 20) {
 			audio->playEffect("res/gong.wav", false, 1.0f, 1.0f, 1.0f);
             this->unschedule(schedule_selector(GameScene::updateTimer));
-            this->schedule(schedule_selector(GameScene::countRemainingTime),0.02f);
+            this->schedule(schedule_selector(GameScene::countRemainingTime),0.05f);
         }
         
         if (nodeA->getTag() == 40) {
